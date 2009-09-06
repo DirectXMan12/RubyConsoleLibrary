@@ -1,0 +1,5 @@
+require 'win32console'
+
+print "one two three\b\b\b four"
+print "\b\b\b "
+gets
