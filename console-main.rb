@@ -1,5 +1,9 @@
-require 'win32console'
-require 'ruby-debug'
+begin
+  require 'Win32/Console/ANSI' if PLATFORM =~ /win32/
+rescue LoadError
+  raise 'You must gem install win32console to use color on Windows'
+end
+#require 'ruby-debug'
 require 'console-controlcodes-hashes.rb'
 require 'console-UIChars-hashes.rb'
 
@@ -13,7 +17,11 @@ module RubyConsoleLibrary
 	end
 	class ControlCode
 		def ControlCode.escape (code)
-			"\e[" + code
+			if code.length == 1
+				"\e(" + code
+			else
+				"\e[" + code
+			end
 		end
 
 		def ControlCode.text_codes
@@ -80,7 +88,7 @@ module RubyConsoleLibrary
 			if (on_off == true)
 				ControlCode.escape "K"
 			else
-				ControlCode.escape "U"
+				ControlCode.escape "U" #windows, or "B" for Linux
 			end
 		end
 	end
@@ -119,11 +127,11 @@ module RubyConsoleLibrary
 		def initialize
 			@wins = [ConsoleWin.new(@@console_size)]
 			print ControlCode.char_conv (false)
-			#hide_cursor
+			hide_cursor
 		end
 
 		def cleanup
-			#show_cursor
+			show_cursor
 			print ControlCode.escape "0m"
 		end
 
@@ -131,7 +139,7 @@ module RubyConsoleLibrary
 
 	class ConsoleWin
 		@dims = [0,0] #x,y
-		@buffer = []
+		@buffer = [] #remake to be [y][x][2] instead of just [y][x] where the last array (a tuple) is in the format [{text_options}, 'character']
 		@cursor = [0,0]
 
 		def cls
