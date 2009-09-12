@@ -50,6 +50,14 @@ module RubyConsoleLibrary
 
 		def box(s_x,s_y, text_opts=:none)
 			#debugger
+			#check for edge overflow - need to write code to check for edge underflow
+			if s_x + @cursor[0] > @dims[0]
+				s_x = @dims[0] - @cursor[0]
+			end
+			if s_y + @cursor[1] > @dims[1]
+				s_y = @dims[1] - @cursor[1]
+			end
+
 			for l in @cursor[1]..(s_y - 1)
 				if l == @cursor[1]
 					@buffer[l][@cursor[0]] = [text_opts,UICharacters.get(:window_corner_top_left)]
