@@ -1,3 +1,4 @@
 t.rb
 *.*~
-
+.*
+!.gitignore

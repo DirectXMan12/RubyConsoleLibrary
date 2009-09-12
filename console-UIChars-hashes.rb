@@ -6,7 +6,8 @@ module RubyConsoleLibrary
 				:corner_top_right => "\xBB",
 				:corner_bottom_right => "\xBC",
 				:corner_top_left => "\xC9",
-				:corner_bottom_left => "\xC8"	
+				:corner_bottom_left => "\xC8",
+			  :bottom => "\xCD"	
 			}
 		}
 	end

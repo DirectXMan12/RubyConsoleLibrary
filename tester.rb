@@ -5,7 +5,7 @@ a = ConsoleApp.new
 #print ControlCode.escape(ControlCode.get_code(:foreground_red))
 w = a.wins[0]
 
-w.box 10,10
+w.box 10,10, :background_blue
 w.refresh
 
 #sleep 10
