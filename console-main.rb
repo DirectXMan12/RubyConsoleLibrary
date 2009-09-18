@@ -15,6 +15,9 @@ require 'console-UICharacters-main.rb'
 require 'console-controlcodes-main.rb'
 require 'console-consoleapp-main.rb'
 require 'console-consolewin-main.rb'
+require 'console-utils-main.rb'
+require 'console-controls-base.rb'
+require 'console-controls-maincontrols.rb'
 
 module RubyConsoleLibrary
 

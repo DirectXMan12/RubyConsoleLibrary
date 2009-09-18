@@ -3,7 +3,7 @@ module RubyConsoleLibrary
 		@parent_window = nil #internal
 		@interactable = true #read
 		@gui_array = nil		 #internal, last used gui
-		@template						 #internal
+		@template	= nil			 #internal
 		attr_reader :enabled #read/write
 		@dims = [0,0] #x,y   #internal
 		attr_reader :opts		 #read/write

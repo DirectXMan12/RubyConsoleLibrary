@@ -4,7 +4,7 @@ module RubyConsoleLibrary
 
 	class ConsoleWin
 		@dims = [0,0] #x,y
-		@buffer = [] 
+		@buffer = []  #in row,column,tuple form 
 		@cursor = [0,0]
 
 		def cls
