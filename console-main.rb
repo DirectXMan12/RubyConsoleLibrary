@@ -18,6 +18,7 @@ require 'console-consolewin-main.rb'
 require 'console-utils-main.rb'
 require 'console-controls-base.rb'
 require 'console-controls-maincontrols.rb'
+if VERSION =~ /1\.8\.6/ then require 'jcode' end #for str.each_char - should be present in 1.8.7 and up by default
 
 module RubyConsoleLibrary
 

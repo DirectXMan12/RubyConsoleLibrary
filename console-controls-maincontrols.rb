@@ -14,7 +14,9 @@ module RubyConsoleLibrary
 		def do_gui(s_x,s_y, state=[:default,:default],opts=nil)
 			@state = state[1]
 			@gui_array = @template
-			return @gui_array 
+			return @gui_array
+
+			#debugger	
 		end		
 
 		def do_interact

@@ -48,6 +48,22 @@ module RubyConsoleLibrary
 			print o
 		end
 
+		def display_obj(display_array)
+			display_array.each_with_index do |a, a_i|
+				a.each_with_index do |b, b_i|
+					@buffer[@cursor[1]+a_i][@cursor[0]+b_i] = b
+				end
+			end
+		end
+
+		def write(obj)
+			str = obj.to_s
+			str.each_char do |c|
+				@buffer[@cursor[1]][@cursor[0]][1] = c
+				@cursor[0] += 1 #need edge overflow checking
+			end
+		end
+
 		def box(s_x,s_y, text_opts=:none)
 			#debugger
 			#check for edge overflow - need to write code to check for edge underflow

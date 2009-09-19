@@ -15,5 +15,18 @@ w.box 20,20
 
 w.refresh
 
+t = TextBoxControl.new(w, 5, 5)
+w.display_obj t.draw
+
+w.refresh
+
+ar = [[[:none,'!:hi']],[[:none, 'h'],[:none, '!']]]
+
+h = {:hi=> "sub"}
+
+r = ConsoleControl.parse_template(ar,h)
+
+#debugger
+
 gets
 a.cleanup
