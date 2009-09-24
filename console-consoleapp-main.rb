@@ -30,10 +30,15 @@ module RubyConsoleLibrary
 			print ConsoleApp.control_code "?25h"
 		end
 
+		def cls
+			print ConsoleApp.control_code "2J"
+		end
+
 		def initialize
 			@wins = [ConsoleWin.new(@@console_size)]
 			print ControlCode.char_conv (false)
 			hide_cursor unless WINDOWS == true
+			cls
 		end
 
 		def cleanup

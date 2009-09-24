@@ -5,8 +5,9 @@ WINDOWS = if (PLATFORM =~ /win32/)
 	  end
 begin
   require 'Win32/Console/ANSI' if WINDOWS == true
+	require 'Win32API' if WINDOWS == true
 rescue LoadError
-  raise 'You must gem install win32console to use ansi control codes and color on windows'
+  raise 'You must gem install win32console (auto-installs win32api) to use ansi control codes, color on windows, and better character capture'
 end
 #require 'ruby-debug'
 require 'console-controlcodes-hashes.rb'

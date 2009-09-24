@@ -9,5 +9,33 @@ module RubyConsoleLibrary
 
 			return ar
 		end
+		
+		if WINDOWS == true
+			@@windows_f = {}
+			@@windows_f[:getch] = Win32API.new("msvcrt","_getch",[],"I")
+		end
+
+		def Utils.getch(e=false,filter=true)
+			
+			if WINDOWS == true
+				n = @@windows_f[:getch].Call
+			else
+				begin
+					system("stty raw -echo")
+					n = STDIN.getc
+				ensure
+					system("stty -raw echo")
+				end
+			end
+
+			c = " "
+			c[0] = n
+			
+			if filter == true && (n > 122 || n < 97)
+				c = ""
+			end	
+
+			return c
+		end
 	end
 end

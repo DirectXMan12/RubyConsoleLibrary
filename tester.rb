@@ -20,13 +20,11 @@ w.display_obj t.draw
 
 w.refresh
 
-ar = [[[:none,'!:hi']],[[:none, 'h'],[:none, '!']]]
-
-h = {:hi=> "sub"}
-
-r = ConsoleControl.parse_template(ar,h)
-
-#debugger
-
-gets
+instr = ""
+while (instr != "x")
+	#sleep 4
+	w.write(instr)
+	w.refresh
+	instr = Utils.getch
+end
 a.cleanup

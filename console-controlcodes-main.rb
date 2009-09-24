@@ -17,14 +17,15 @@ module RubyConsoleLibrary
 		end
 
 		def ControlCode.get_code (code_name)
-			if code_name.to_sym == :none then return ControlCode.escape "0m" end
+			if code_name.nil? then return end
+			if (!code_name.is_a?(Array) && (code_name.to_sym == :none)) then return ControlCode.escape "0m" end
 
 			a = false
 			c = nil
 			cs = nil
 			as = nil
 
-			if code_name.class == Array.class
+			if code_name.is_a?(Array)
 				a = true
 
 				as = code_name[1..code_name.length-1]
@@ -47,11 +48,11 @@ module RubyConsoleLibrary
 						when 'clear'
 							@@cursor[:clearing]
 					end
-			r = l[cs[1].to_sym]
+			r = l[cs[1].to_sym].dup
 			
 			if a == true
 				as.each do |n|
-					r.sub!("val", n)
+					r.sub!("val", n.to_s)
 				end
 			end
 
@@ -69,9 +70,9 @@ module RubyConsoleLibrary
 				codes += ";" unless code_names_vals.length == 1 || i == code_names_vals.length - 1 
 			end
 
-			codes.delete! "m"
+			q = codes.delete! "m"
 			codes = ControlCode.escape codes
-			codes += "m"
+			codes += "m" unless !q
 			return codes
 		end
 

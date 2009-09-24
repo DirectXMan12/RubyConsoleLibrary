@@ -29,23 +29,22 @@ module RubyConsoleLibrary
 		end
 
 		def refresh
-			cls
-			o = ""	
-			s = StringIO.new o
+			#cls
+			#instead of clearing the screen, just go back to 1,1 with cursor
+			print ControlCode.get_full([[:cursor_pos,1,1]])
 			@buffer.each do |l|
 				l.each do |c|
 					if !c.nil? && !c[1].nil? 
-						s.print ControlCode.get_full(c[0]) unless c[0] == :none
-						s.print c[1]
-						s.print ControlCode.escape "0m" unless c[0] == :none
+						print ControlCode.get_full(c[0]) unless c[0] == :none
+						print c[1]
+						print ControlCode.escape "0m" unless c[0] == :none
 					else
-						s.print ' '
+						print ' '
 					end
 				end
-				s.print "\n"
+				print "\n"
 			end
 			#debugger
-			print o
 		end
 
 		def display_obj(display_array)
@@ -56,11 +55,21 @@ module RubyConsoleLibrary
 			end
 		end
 
-		def write(obj)
-			str = obj.to_s
-			str.each_char do |c|
-				@buffer[@cursor[1]][@cursor[0]][1] = c
-				@cursor[0] += 1 #need edge overflow checking
+		def write(str,opts=:none)
+			r = false
+			r = opts.delete(:norefresh) unless (!opts.is_a?(Hash) || !opts[:norefresh]) 
+			str = str.to_s
+			if (r == true)
+				print ControlCode.escape ControlCode.get_code([:cursor_pos,@cursor[1],@cursor[0]])
+				str.each_char do |c|
+					print c	
+				end
+			else
+				str.each_char do |c|
+					@buffer[@cursor[1]][@cursor[0]][1] = c
+					@buffer[@cursor[1]][@cursor[0]][0] = opts 
+					@cursor[0] += 1 #need edge overflow checking
+				end
 			end
 		end
 
