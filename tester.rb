@@ -23,8 +23,13 @@ w.refresh
 instr = ""
 while (instr != "x")
 	#sleep 4
-	w.write(instr)
+	#w.write(instr)
 	w.refresh
 	instr = Utils.getch
+
+	t.enabled = true
+	t.interact
+
+	w.display_obj t.draw
 end
 a.cleanup
