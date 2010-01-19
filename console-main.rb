@@ -1,9 +1,14 @@
-WINDOWS = if (PLATFORM =~ /win32/)
+#initialize the constants to work with multiple ruby versions
+if (!defined? PLATFORM) then PLATFORM = RUBY_PLATFORM end
+if (!defined? VERSION) then VERSION = RUBY_VERSION end
+
+WINDOWS = if (PLATFORM =~ /(win(32|64))|(mingw(32|64))/)
 		  true
 	  else
 		  false
 	  end
 begin
+	puts "" + (if (WINDOWS) then "windows detected: " else "POSIX detected: " end) + "#{PLATFORM}"
   require 'Win32/Console/ANSI' if WINDOWS == true
 	require 'Win32API' if WINDOWS == true
 rescue LoadError

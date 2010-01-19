@@ -3,7 +3,7 @@ h1. RubyConsoleLibrary
 * An ncurses-/curses-like library for building console applications
 ** RubyConsoleLibrary is different from other ruby console libraries in that it is written wholly in ruby, with out any native code required (see below)
 
-h3. note: not yet ruby 1.9 compatible (it is more than just changing the constant names from X to RUBY_X - the ascii color support seems to be broken, at lease on Windows 7, and I also get some errors in getch)
+h3. note: not yet ruby 1.9 compatible [-(it is more than just changing the constant names from X to RUBY_X - the ascii color support seems to be broken,-] [-at lease on Windows 7, and I also-] get some errors in getch)
 
 h2. - Requirements/Installation -
 
