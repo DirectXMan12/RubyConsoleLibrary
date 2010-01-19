@@ -18,4 +18,4 @@ include RubyConsoleLibrary
 
 h2. - Example -
 
-see tester.rb 
+see  the file "tester.rb" in the root directory 
