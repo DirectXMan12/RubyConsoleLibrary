@@ -1,1 +1,4 @@
 t.rb
+*.*~
+.*.swp
+!.gitignore
