@@ -10,8 +10,10 @@ module RubyConsoleLibrary
 			@current_text = t.to_s
 			local_cursor_x = 1
 			@current_text.each_char do |c|
-				@template[local_cursor_x][1] = c
-				local_cursor_x += 1
+				if (local_cursor_x < @dims[0])
+					@template[local_cursor_x][1] = [:none, c]
+					local_cursor_x += 1
+				end
 			end
 		end
 
@@ -21,6 +23,7 @@ module RubyConsoleLibrary
 			@template = Utils.display_array(@dims[0],@dims[1])
 			@template[1][1] = [:none, "!:test_letter"] #for test purposes
 			@interactable = true	
+			@current_text = ""
 		end
 
 		#begin private overloaded methods...
@@ -44,7 +47,7 @@ module RubyConsoleLibrary
 
 		def do_interact
 			@state = :open
-			current_text = @current_text + "x"
+			self.current_text += "x"
 			return @state.to_s #success!
 		end	
 	end
