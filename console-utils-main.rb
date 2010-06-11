@@ -29,7 +29,7 @@ module RubyConsoleLibrary
 			end
 
 			c = " "
-			c[0] = n
+			c.setbyte(0,n)
 			
 			if filter == true && (n > 122 || n < 97)
 				c = ""
