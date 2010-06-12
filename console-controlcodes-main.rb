@@ -19,7 +19,7 @@ module RubyConsoleLibrary
 		def ControlCode.get_code (code_name)
 			if code_name.nil? then return end
 			if (!code_name.is_a?(Array) && (code_name.to_sym == :none)) then return ControlCode.escape "0m" end
-
+			
 			a = false
 			c = nil
 			cs = nil

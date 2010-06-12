@@ -11,8 +11,10 @@ module RubyConsoleLibrary
 			local_cursor_x = 1
 			@current_text.each_char do |c|
 				if (local_cursor_x < @dims[0])
-					@template[local_cursor_x][1] = [:none, c]
+					@template[1][local_cursor_x] = [:none, c]
 					local_cursor_x += 1
+				else
+					@template[1][@dims[0]-1] = [:deco_bold, '>']
 				end
 			end
 		end

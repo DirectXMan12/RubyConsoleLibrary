@@ -15,7 +15,7 @@ w.box 20,20
 
 w.refresh
 
-t = TextBoxControl.new(w, 5, 5)
+t = TextBoxControl.new(w, 5, 3)
 w.display_obj t.draw
 
 w.refresh
