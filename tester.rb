@@ -9,7 +9,7 @@ w.box 10,10, :background_blue
 w.refresh
 
 #sleep 10
-gets
+#gets
 
 w.box 20,20
 
@@ -25,9 +25,10 @@ while (instr != "x")
 	#sleep 4
 	#w.write(instr)
 	w.refresh
-	instr = Utils.getch
+	instr = Utils.getch(false)
 
 	t.enabled = true
+	w.pressed_key = instr
 	t.interact
 
 	w.display_obj t.draw

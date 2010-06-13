@@ -6,6 +6,7 @@ module RubyConsoleLibrary
 		@dims = [0,0] #x,y
 		@buffer = []  #in row,column,tuple form 
 		@cursor = [0,0]
+		@key_state = [nil,nil]
 
 		def cls
 			print ConsoleApp.control_code "2J"
@@ -19,6 +20,8 @@ module RubyConsoleLibrary
 				@buffer[a].each_index { |b| @buffer[a][b] = Array.new(2) } #tuple in format [{text_options}, 'character'] 
 			end
 			@cursor = [0,0]
+			
+			@key_state = [nil,nil] #tuple in format of [char, :state]
 		end	
 		
 		def dims
@@ -26,6 +29,20 @@ module RubyConsoleLibrary
 		end
 		def dims= (new_dims)
 			@dims = new_dims
+		end
+
+		def key_state
+			return @key_state
+		end
+
+		def pressed_key=(k)
+			if (!k.nil?) 
+				s = :pressed
+			else 
+				s = nil
+			end
+
+			@key_state = [k,s]
 		end
 
 		def refresh

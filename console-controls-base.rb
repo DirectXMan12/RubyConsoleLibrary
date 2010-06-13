@@ -15,6 +15,10 @@ module RubyConsoleLibrary
 			@enabled = true
 		end
 
+		def owner
+			@parent_window
+		end
+
 		def enabled?
 			return @enabled
 		end
