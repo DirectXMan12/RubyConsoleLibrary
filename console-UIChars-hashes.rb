@@ -31,7 +31,7 @@ module RubyConsoleLibrary
 				:music_note => "\x0E",
 				:gear => "\x0F"
 			},
-			:special_chars => {
+			:special => {
 				:bell => "\x07"
 			}
 
