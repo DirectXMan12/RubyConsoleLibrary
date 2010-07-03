@@ -102,25 +102,25 @@ module RubyConsoleLibrary
 
 			for l in @cursor[1]..(s_y - 1)
 				if l == @cursor[1]
-					@buffer[l][@cursor[0]] = [text_opts,UICharacters.get(:window_corner_top_left)]
+					@buffer[l][@cursor[0]] = [text_opts,UI[:window_corner_top_left]]
 				elsif l == s_y -1
-					@buffer[l][@cursor[0]] = [text_opts,UICharacters.get(:window_corner_bottom_left)]
+					@buffer[l][@cursor[0]] = [text_opts,UI[:window_corner_bottom_left]]
 				else
-					@buffer[l][@cursor[0]] = [text_opts,UICharacters.get(:window_side)]
+					@buffer[l][@cursor[0]] = [text_opts,UI[:window_side]]
 				end
 				
 				#debugger
 				if l == 0 || l == s_y-1
 					#debugger
-					(s_x-2).times { |c| @buffer[l][@cursor[0]+c+1] = [text_opts,UICharacters.get(:window_bottom)]}
+					(s_x-2).times { |c| @buffer[l][@cursor[0]+c+1] = [text_opts,UI[:window_bottom]]}
 				end
 				
 				if l == @cursor[1]
-					@buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UICharacters.get(:window_corner_top_right)]
+					@buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UI[:window_corner_top_right]]
 				elsif l == s_y - 1
-					@buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UICharacters.get(:window_corner_bottom_right)]
+					@buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UI[:window_corner_bottom_right]]
 				else
-					@buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UICharacters.get(:window_side)]
+					@buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UI[:window_side]]
 				end
 			end
 		end

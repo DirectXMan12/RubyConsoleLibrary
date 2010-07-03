@@ -20,13 +20,13 @@ module RubyConsoleLibrary
 				if (@dims[0]-2 < @current_text.length)
 					unless (typing_cursor > current_text.length-2)
 						unless display_cursor == 0
-							@template[1][@dims[0]-1] = [:deco_bold, UICharacters.get(:nav_scroll_right)]
-							@template[1][0] = [:deco_bold, UICharacters.get(:nav_scroll_left)]
+							@template[1][@dims[0]-1] = [:deco_bold, UI[:nav_scroll_right]]
+							@template[1][0] = [:deco_bold, UI[:nav_scroll_left]]
 						else
-							@template[1][@dims[0]-1] = [:deco_bold, UICharacters.get(:nav_scroll_right)]
+							@template[1][@dims[0]-1] = [:deco_bold, UI[:nav_scroll_right]]
 						end
 					else
-						@template[1][0] = [:deco_bold, UICharacters.get(:nav_scroll_left)]
+						@template[1][0] = [:deco_bold, UI[:nav_scroll_left]]
 					end
 				end
 

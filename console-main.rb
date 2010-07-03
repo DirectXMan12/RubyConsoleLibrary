@@ -17,8 +17,9 @@ end
 #require 'ruby-debug'
 require 'console-controlcodes-hashes.rb'
 require 'console-UIChars-hashes.rb'
-require 'console-UICharacters-main.rb'
-require 'console-controlcodes-main.rb'
+require 'console-characters-utils.rb'
+#require 'console-UICharacters-main.rb'
+#require 'console-controlcodes-main.rb'
 require 'console-consoleapp-main.rb'
 require 'console-consolewin-main.rb'
 require 'console-utils-main.rb'
@@ -27,5 +28,5 @@ require 'console-controls-maincontrols.rb'
 if VERSION =~ /1\.8\.6/ then require 'jcode' end #for str.each_char - should be present in 1.8.7 and up by default
 
 module RubyConsoleLibrary
-
+	
 end

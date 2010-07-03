@@ -1,21 +1,33 @@
 module RubyConsoleLibrary
-	class ControlCode
-		def ControlCode.escape (code)
-			if code.length == 1 && WINDOWS != true
-				"\e(" + code
-			else
-				"\e[" + code
-			end
-		end
-
-		def ControlCode.text_codes
-			@@text
+	# this is a utility class for retrieving special ui characters
+	class UI
+		def UI.[](key)
+			c = key.to_s
+			cs = c.split('_', 2)
+			@@chars[cs[0].to_sym][cs[1].to_sym]
 		end
 		
-		def ControlCode.cursor_codes
-			@@cursor
+		# see char_conv under ControlCode
+		def UI.on
+			ControlCode.char_conv(true)
+		end
+		
+		def UI.off
+			ControlCode.char_conv(false)
+		end
+	end
+
+	# this is a utility class for retrieving special control characters that determine color
+	class ControlCode
+		
+		# handles the retrieval of a single control code (essentially an alias for ControlCode.get_code)
+		def ControlCode.[] (code_name)
+			c = code_name
+			if (c.is_a?(String)) then c = c.to_sym end
+			ControlCode.get_code(c)
 		end
 
+		# handles the actual retrieval of a single control code or multiple control codes
 		def ControlCode.get_code (code_name)
 			if code_name.nil? then return end
 			if (!code_name.is_a?(Array) && (code_name.to_sym == :none)) then return ControlCode.escape "0m" end
@@ -58,13 +70,14 @@ module RubyConsoleLibrary
 
 			return r
 		end
-	
+
+		# renders a set of controle codes for output
 		def ControlCode.get_full (code_names_vals)
 			if code_names_vals.nil? then return "" end
 			if code_names_vals.class == Symbol || code_names_vals.class == String then code_names_vals = [code_names_vals] end
 			codes = ""
 			code_names_vals.each_with_index do |code_name,i|
-				c = ControlCode.get_code code_name
+				c = ControlCode[code_name]
 				if c == "" then next end
 				codes += c	
 				codes += ";" unless code_names_vals.length == 1 || i == code_names_vals.length - 1 
@@ -76,11 +89,25 @@ module RubyConsoleLibrary
 			return codes
 		end
 
+		# returns a control code to turn on or off special UI Characters
 		def ControlCode.char_conv (on_off)
 			if (on_off == true)
 				ControlCode.escape "K"
 			else
-				ControlCode.escape "U" #windows, or "B" for Linux
+				ControlCode.escape( if (WINDOWS) then "U" else "B" end )
+			end
+		end
+		
+
+		# internal methods
+		private
+		
+		# escapes the code properly according to platform and code length
+		def ControlCode.escape (code)
+			if code.length == 1 && WINDOWS != true
+				"\e(" + code
+			else
+				"\e[" + code
 			end
 		end
 	end

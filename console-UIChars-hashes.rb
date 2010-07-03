@@ -1,5 +1,5 @@
 module RubyConsoleLibrary
-	class UICharacters
+	class UI
 		@@chars = {
 			:window => {
 				:side => "\xBA",
