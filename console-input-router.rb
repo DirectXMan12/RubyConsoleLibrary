@@ -1,0 +1,80 @@
+module RubyConsoleLibrary
+	class InputRouter
+		attr_accessor :bound_window   # ref to window to which to route interactions
+		@control_stack = []           # stack of interactable controls - internal
+		@stack_pos = 0                # currently focused item in @control_stack (for controls like a text box which hog all input) - internal
+		@key_bindings = {}            # hash of key to control bindings - internal, but accessible via methods
+		@backup_bindings = {}         # for use when 'capture_all_input' is called
+
+		def initialize(bound_window)	
+			@bound_window = bound_window
+			@control_stack = @bound_window.get_controls(true) # implement this method
+			@stack_pos = 0
+			@key_bindings = {}
+		end
+
+		# accepts a string (or symbol) of a key, as well as a hash, which can be either :custom => Proc, :control => ConsoleControl,
+		# or :special => Proc (for shifting focus, etc)
+		def bind_key(key, control=nil, &block)
+
+			if (control && block) then raise "you can't specifiy both a control and a block" end
+
+			@key_bindings[key.to_sym] = if (control)
+																		Proc.new { opts[:control].interact }
+																	else
+																		block
+																	end	
+		end
+
+		def remove_binding(key)
+			@key_bindings.delete(key.to_sym)
+		end
+
+		def handle_input(key)
+			k = key.to_sym
+			
+			# register the key as having been input
+			@bound_window.pressed_key = if (key.to_s.length == 1) then key.to_s else key end 
+
+			# call the Proc in the context where it can call methods like focus_next, etc
+			unless (!@key_bindings[k]) then self.instance_eval(&@key_bindings[k]) end
+		end
+
+		private
+		# stuff for the blocks (see handle_input)
+		def focus_next
+			unless (@stack_pos + 1 == @control_stack.length)
+			 	@stack_pos += 1 
+			else 
+				@stack_pos = 0 
+			end
+		end
+
+		def focus_prev
+			unless (@stack_pos - 1 == -1)
+			 	@stack_pos -= 1 
+			else 
+				@stack_pos = @control_stack.length - 1 
+			end
+		end
+
+		# stops routing temporarily (use with controls like the text box)
+		def capture_all_input(opts)
+			opts[:except] ||= []
+			unless (opts[:except].is_a?(Array)) then opts[:except] = [opts[:except]] end 
+
+			if (!opts[:until]) then raise 'you must have a release key' end
+
+			@backup_bindings = @key_bindings.clone
+			@key_bindings.delete_if	do |k, v|
+				!opts[:except].include?(k.to_sym)
+			end
+			@key_bindings[opts[:until].to_sym] = Proc.new { release_input }
+		end
+		
+		# ends a capture_all_input command (see above)
+		def release_input
+			@key_bindings = @backup_bindings.clone
+		end
+	end
+end

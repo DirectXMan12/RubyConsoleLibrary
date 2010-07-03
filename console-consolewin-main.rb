@@ -7,6 +7,7 @@ module RubyConsoleLibrary
 		@buffer = []  #in row,column,tuple form 
 		@cursor = [0,0]
 		@key_state = [nil,nil]
+		@control_stack = []
 
 		def cls
 			print ConsoleApp.control_code "2J"
@@ -22,6 +23,7 @@ module RubyConsoleLibrary
 			@cursor = [0,0]
 			
 			@key_state = [nil,nil] #tuple in format of [char, :state]
+			@control_stack = []
 		end	
 		
 		def dims
@@ -43,6 +45,18 @@ module RubyConsoleLibrary
 			end
 
 			@key_state = [k,s]
+		end
+
+		def get_control(only_interactables)
+			res = []
+
+			if (only_interactables)
+				@control_stack.each do |c|
+					if (c.interactable?) then res.insert(-1, c) end
+				end
+			end
+
+			return res
 		end
 
 		def refresh

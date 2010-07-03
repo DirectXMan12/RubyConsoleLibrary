@@ -8,11 +8,13 @@ module RubyConsoleLibrary
 		@dims = [0,0] #x,y   #internal
 		@opts = {}    	     #read/write
 		@state = :default		 #read
+		@loc = [0,0] #x,y    #read, write only initialize
 
-		def initialize(parent_obj)
+		def initialize(parent_obj, pos=[0,0])
 			@parent_window = parent_obj
 			@opts = {}
 			@enabled = true
+			@loc = pos
 		end
 
 		def owner
