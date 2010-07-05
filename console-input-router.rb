@@ -5,12 +5,14 @@ module RubyConsoleLibrary
 		@stack_pos = 0                # currently focused item in @control_stack (for controls like a text box which hog all input) - internal
 		@key_bindings = {}            # hash of key to control bindings - internal, but accessible via methods
 		@backup_bindings = {}         # for use when 'capture_all_input' is called
+		attr_accessor :pass_through_input   # determines whether or not to pass through all input, not just unrecognized input
 
 		def initialize(bound_window)	
 			@bound_window = bound_window
 			@control_stack = @bound_window.get_controls(true) # implement this method
 			@stack_pos = 0
 			@key_bindings = {}
+			@pass_through_input = false
 		end
 
 		# accepts a string (or symbol) of a key, as well as a hash, which can be either :custom => Proc, :control => ConsoleControl,
@@ -30,14 +32,33 @@ module RubyConsoleLibrary
 			@key_bindings.delete(key.to_sym)
 		end
 
+		def bindings (&block)
+			self.instance_eval(&block)
+		end
+
 		def handle_input(key)
-			k = key.to_sym
-			
-			# register the key as having been input
-			@bound_window.pressed_key = if (key.to_s.length == 1) then key.to_s else key end 
+			k = key.to_sym	
 
 			# call the Proc in the context where it can call methods like focus_next, etc
-			unless (!@key_bindings[k]) then self.instance_eval(&@key_bindings[k]) end
+			unless (!@key_bindings[k])
+				self.instance_eval(&@key_bindings[k])
+			 	@bound_window.pressed_key = nil	
+
+				unless (!@pass_through_input)
+					@bound_window.pressed_key = if (key.to_s.length == 1) then key.to_s else key end
+					if (!@handle_callback.nil?) then self.instance_eval(&@handle_callback) end
+				end
+			else
+				# register the key as having been input
+				@bound_window.pressed_key = if (key.to_s.length == 1) then key.to_s else key end
+				if (!@handle_callback.nil?) then self.instance_eval(&@handle_callback) end
+			end
+
+
+		end
+		
+		def current_control
+			@control_stack[@stack_pos]
 		end
 
 		private
@@ -59,7 +80,7 @@ module RubyConsoleLibrary
 		end
 
 		# stops routing temporarily (use with controls like the text box)
-		def capture_all_input(opts)
+		def capture_all_input(opts, &block)
 			opts[:except] ||= []
 			unless (opts[:except].is_a?(Array)) then opts[:except] = [opts[:except]] end 
 
@@ -70,11 +91,22 @@ module RubyConsoleLibrary
 				!opts[:except].include?(k.to_sym)
 			end
 			@key_bindings[opts[:until].to_sym] = Proc.new { release_input }
+
+			if (!block.nil?)
+				@handle_callback = block
+			end
 		end
 		
 		# ends a capture_all_input command (see above)
 		def release_input
 			@key_bindings = @backup_bindings.clone
+			@handle_callback = nil
 		end
+
+		def feed_through(opts=nil)
+			full_opts ||= {:to => current_control}
+			full_opts[:to].interact
+		end
+
 	end
 end

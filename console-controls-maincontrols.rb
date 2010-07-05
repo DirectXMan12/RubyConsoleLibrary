@@ -59,9 +59,9 @@ module RubyConsoleLibrary
 			end
 		end
 
-		def initialize (parent_window, s_x,s_y)
-			super(parent_window)
-			@dims = [s_x, s_y]
+		def initialize (parent_window, s_x, pos=[1,1])
+			super(parent_window, pos)
+			@dims = [s_x, 3]
 			#@template = Utils.display_array(@dims[0],@dims[1])
 			#@template[1][1] = [:none, "!:test_letter"] #for test purposes
 			@template = self.make_template

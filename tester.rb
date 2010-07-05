@@ -11,14 +11,35 @@ w.refresh
 #sleep 10
 #gets
 
-w.box 20,20
+#w.box 20,20
 
 w.refresh
 
-t = TextBoxControl.new(w, 5, 3)
-w.display_obj t.draw
+t = TextBoxControl.new(w, 5, [10, 4])
+w.new_control t
+t.enabled = true
+
+q = TextBoxControl.new(w, 7, [10, 12])
+w.new_control q
+q.enabled = true
 
 w.refresh
+
+inrouter = InputRouter.new(w)
+
+inrouter.bindings do
+	bind_key(:up_arrow) do
+		focus_prev
+	end
+	bind_key(:down_arrow) do
+		focus_next
+	end
+	bind_key(:enter) do
+		capture_all_input :until => :escape do
+			feed_through 
+		end
+	end
+end
 
 instr = ""
 while (instr != "x")
@@ -26,11 +47,7 @@ while (instr != "x")
 	#w.write(instr)
 	w.refresh
 	instr = Utils.getch(false)
+	inrouter.handle_input(instr)
 
-	t.enabled = true
-	w.pressed_key = instr
-	t.interact
-
-	w.display_obj t.draw
 end
 a.cleanup

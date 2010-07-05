@@ -32,6 +32,12 @@ module RubyConsoleLibrary
 					when 0x08
 						is_special_key = true
 						c = :backspace
+					when 0x1B
+						is_special_key = true
+						c = :escape
+					when 0x0D
+						is_special_key = true
+						c = :enter
 				end
 			else
 				begin

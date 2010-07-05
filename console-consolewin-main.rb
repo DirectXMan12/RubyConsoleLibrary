@@ -47,21 +47,39 @@ module RubyConsoleLibrary
 			@key_state = [k,s]
 		end
 
-		def get_control(only_interactables)
+		def get_controls(only_interactables)
 			res = []
 
 			if (only_interactables)
 				@control_stack.each do |c|
 					if (c.interactable?) then res.insert(-1, c) end
 				end
+			else
+				res = @control_stack
 			end
 
 			return res
 		end
 
+		def new_control(c)
+			@control_stack << c
+		end
+
+		def remove_control(c)
+			@control_stack.delete c
+		end
+
+		def refresh_buffer
+			@control_stack.each do |c|
+				@cursor = c.loc
+				display_obj c.draw
+			end
+		end
+
 		def refresh
 			#cls
 			#instead of clearing the screen, just go back to 1,1 with cursor
+			refresh_buffer
 			print ControlCode.get_full([[:cursor_pos,1,1]])
 			@buffer.each do |l|
 				l.each do |c|

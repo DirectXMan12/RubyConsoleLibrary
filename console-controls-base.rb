@@ -1,14 +1,14 @@
 module RubyConsoleLibrary
 	class ConsoleControl
-		@parent_window = nil #internal
-		@interactable = true #read
-		@gui_array = nil		 #internal, last used gui
-		@template	= nil			 #internal
-		@enabled = true      #read/write
-		@dims = [0,0] #x,y   #internal
-		@opts = {}    	     #read/write
-		@state = :default		 #read
-		@loc = [0,0] #x,y    #read, write only initialize
+		@parent_window = nil        #internal
+		@interactable = true        #read
+		@gui_array = nil		        #internal, last used gui
+		@template	= nil			        #internal
+		@enabled = true             #read/write
+		@dims = [0,0] #x,y          #internal
+		@opts = {}    	            #read/write
+		@state = :default		        #read
+		attr_accessor :loc #x,y     #read, write only initialize
 
 		def initialize(parent_obj, pos=[0,0])
 			@parent_window = parent_obj
