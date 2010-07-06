@@ -89,9 +89,41 @@ module RubyConsoleLibrary
 			return t_t
 		end
 						
-		#internal methods - these should be replaced by actual control methods
+		
 		private
+		#utility methods
+		def make_box(type_prefix=:line, style=:deco_bold)
+			t = Utils.display_array(@dims[0],@dims[1])
+			
+			t.each_with_index do |row,i|
+				unless (i == 0 or i == @dims[1]-1) # unless it's the top or bottom row
+				 	row[0] = [style, UI[:line_side]]
+					row[@dims[0]-1] = [style, UI[(type_prefix.to_s + '_side').to_sym]] 
+				end	
+			end
+			
+			t[0].each_with_index do |col,i|
+				unless (i == 0 or i == @dims[0]-1)
+					t[0][i] = [style, UI[(type_prefix.to_s + '_bottom').to_sym]]
+				end
+			end
 
+			t[@dims[1]-1].each_with_index do |col,i|
+				unless (i == 0 or i == @dims[0]-1)
+					t[@dims[1]-1][i] = [style, UI[(type_prefix.to_s + '_bottom').to_sym]]
+				end
+			end
+
+			# now assign the corners
+			t[0][0] = [style, UI[(type_prefix.to_s + '_corner_top_left').to_sym]]
+			t[0][@dims[0]-1] = [style, UI[(type_prefix.to_s + '_corner_top_right').to_sym]]
+			t[@dims[1]-1][0] = [style, UI[(type_prefix.to_s + '_corner_bottom_left').to_sym]]
+			t[@dims[1]-1][@dims[0]-1] = [style, UI[(type_prefix.to_s + '_corner_bottom_right').to_sym]]
+
+			return t
+		end
+
+		#internal methods - these should be replaced by actual control methods
 		def do_gui(s_x,s_y, state=[:default,:default],opts=nil)
 			@state = state[1]
 			@gui_array = @template.deep_copy

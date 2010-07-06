@@ -102,7 +102,8 @@ module RubyConsoleLibrary
 			@key_bindings = @backup_bindings.clone
 			@handle_callback = nil
 		end
-
+		
+		# "feeds" input through to a specified control (or the current control by default)
 		def feed_through(opts=nil)
 			full_opts ||= {:to => current_control}
 			full_opts[:to].interact
