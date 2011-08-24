@@ -14,18 +14,18 @@ begin
 rescue LoadError
   raise 'You must gem install win32console (auto-installs win32api) to use ansi control codes, color on windows, and better character capture'
 end
-#require 'ruby-debug'
-require 'console-controlcodes-hashes.rb'
-require 'console-UIChars-hashes.rb'
-require 'console-characters-utils.rb'
-#require 'console-UICharacters-main.rb'
-#require 'console-controlcodes-main.rb'
-require 'console-consoleapp-main.rb'
-require 'console-consolewin-main.rb'
-require 'console-utils-main.rb'
-require 'console-controls-base.rb'
-require 'console-controls-maincontrols.rb'
-require 'console-input-router.rb'
+require_relative 'console-controlcodes-hashes.rb'
+require_relative 'console-UIChars-hashes.rb'
+require_relative 'console-characters-utils.rb'
+#require_relative 'console-UICharacters-main.rb'
+#require_relative 'console-controlcodes-main.rb'
+require_relative 'console-consoleapp-main.rb'
+require_relative 'console-consolewin-main.rb'
+require_relative 'console-utils-main.rb'
+require_relative 'console-controls-base.rb'
+require_relative 'console-controls-templater.rb'
+require_relative 'console-controls-maincontrols.rb'
+require_relative 'console-input-router.rb'
 if VERSION =~ /1\.8\.6/ then require 'jcode' end #for str.each_char - should be present in 1.8.7 and up by default
 
 module RubyConsoleLibrary
