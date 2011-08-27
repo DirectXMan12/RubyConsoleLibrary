@@ -1,4 +1,4 @@
-require 'console-main.rb'
+require './console-main.rb'
 include RubyConsoleLibrary
 
 a = ConsoleApp.new

@@ -30,7 +30,7 @@ module RubyConsoleLibrary
 		# handles the actual retrieval of a single control code or multiple control codes
 		def ControlCode.get_code (code_name)
 			if code_name.nil? then return end
-			if (!code_name.is_a?(Array) && (code_name.to_sym == :none)) then return ControlCode.escape "0m" end
+			if (!code_name.is_a?(Array) && (code_name.to_sym == :none)) then return "0m" end
 			
 			a = false
 			c = nil
@@ -74,7 +74,7 @@ module RubyConsoleLibrary
 		# renders a set of controle codes for output
 		def ControlCode.get_full (code_names_vals)
 			if code_names_vals.nil? then return "" end
-			if code_names_vals.class == Symbol || code_names_vals.class == String then code_names_vals = [code_names_vals] end
+			if code_names_vals.kind_of?(Symbol) || code_names_vals.kind_of?(String) then code_names_vals = [code_names_vals] end
 			codes = ""
 			code_names_vals.each_with_index do |code_name,i|
 				c = ControlCode[code_name]
@@ -103,8 +103,8 @@ module RubyConsoleLibrary
 		private
 		
 		# escapes the code properly according to platform and code length
-		def ControlCode.escape (code)
-			if code.length == 1 && WINDOWS != true
+		def ControlCode.escape (code, use_paren=false)
+			if code.length == 1 && WINDOWS != true && use_paren
 				"\e(" + code
 			else
 				"\e[" + code

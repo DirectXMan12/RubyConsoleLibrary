@@ -1,4 +1,4 @@
-require 'console-controls-templatehashes.rb'
+require_relative 'console-controls-templatehashes.rb'
 module RubyConsoleLibrary
 	class TextBoxControl < ConsoleControl		
 		@current_text = "" #read, write
@@ -70,8 +70,30 @@ module RubyConsoleLibrary
 			@cursor_loc = 0
 		end
 
+ #   def make_template
+ #     self.class.raw_template(:deco_bold).render(*@dims)
+ #   end
+    
 		#begin private overloaded methods...
 		private
+
+    def self.raw_template(style)
+      @current_ui_style ||= style
+      unless @current_ui_style == style
+        @current_ui_style = style
+        @raw_template = ControlTemplate.define do
+          line [style, UI[:line_corner_top_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_top_right]]
+          line [style, UI[:line_side]], [:none, exp(' ')], [style, UI[:line_side]]
+          line [style, UI[:line_corner_bottom_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_bottom_right]]
+        end
+      else
+        @raw_template ||= ControlTemplate.define do
+          line [style, UI[:line_corner_top_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_top_right]]
+          line [style, UI[:line_side]], [:none, exp(' ')], [style, UI[:line_side]]
+          line [style, UI[:line_corner_bottom_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_bottom_right]]
+        end
+      end
+    end
 
 		def do_gui(s_x,s_y, state=[:default,:default],opts=nil)
 			#@state = state[1]

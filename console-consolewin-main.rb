@@ -1,4 +1,3 @@
-require 'ruby-debug'
 module RubyConsoleLibrary
 	
 

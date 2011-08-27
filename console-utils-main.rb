@@ -42,7 +42,38 @@ module RubyConsoleLibrary
 			else
 				begin
 					system("stty raw -echo")
-					n = STDIN.getc
+					n = STDIN.getbyte
+          if n == 27 
+            begin
+              n2 = STDIN.read_nonblock(1).getbyte(0)
+              if n2 == 91
+                n = STDIN.getbyte # get the next two bytes
+                is_special_key = true
+                case n
+                when 68
+                  c = :left_arrow
+                when 65
+                  c = :up_arrow
+                when 67
+                  c = :right_arrow
+                when 66
+                  c = :down_arrow
+                else
+                  c = :unrecognized
+                end
+              end
+            rescue IO::WaitReadable
+              # is just the escape key
+              is_special_key = true
+              c = :escape
+            end
+          elsif n == 127
+            is_special_key = true
+            c = :backspace
+          elsif n == 13
+            is_special_key = true
+            c = :enter
+          end
 				ensure
 					system("stty -raw echo")
 				end

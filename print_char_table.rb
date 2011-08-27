@@ -34,26 +34,34 @@ def print_char_table
 	end
 end
 
-def raw_getch(two_calls=false)
-	if WINDOWS == true
-		windows_f = {}
-		windows_f[:getch] = Win32API.new("msvcrt","_getch",[],"I")
-		n1 = windows_f[:getch].Call
-		if (two_calls)
-			n2 = windows_f[:getch].Call
-		end
-	else
-		begin
-			system("stty raw -echo")
-			n1 = STDIN.getc
-		ensure
-			system("stty -raw echo")
-		end
-	end
+def esc(s)
+  eval '"\e'+s+'"'
+end
 
-	unless (n2.nil?)
-		return [n1,n2]
-	else
-		return n1
-	end
+def putse(s)
+  puts esc(s)
+end
+
+class HexRange < Range
+  def initialize
+    super 0, 15
+  end
+
+  def each
+    (0..9).each {|n| yield n.to_s }
+    ('A'..'F').each {|l| yield l }
+  end
+end
+
+def print_unicode_char_table
+  HexRange.new.each do |l0|
+    HexRange.new.each do |l1|
+      HexRange.new.each do |l2|
+        gets
+        HexRange.new.each do |l3|
+          puts '\u'+l0+l1+l2+l3+'          '+eval('"\u'+l0+l1+l2+l3+'"')
+        end
+      end
+    end
+  end
 end

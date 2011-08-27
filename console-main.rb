@@ -14,6 +14,11 @@ begin
 rescue LoadError
   raise 'You must gem install win32console (auto-installs win32api) to use ansi control codes, color on windows, and better character capture'
 end
+if WINDOWS # detect unicode support
+  IS_UNICODE = false
+else
+  IS_UNICODE = if ENV['LANG'] =~ /UTF-?(8|16|32)/i then true else false end
+end
 require_relative 'console-controlcodes-hashes.rb'
 require_relative 'console-UIChars-hashes.rb'
 require_relative 'console-characters-utils.rb'
