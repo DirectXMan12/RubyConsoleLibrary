@@ -23,6 +23,10 @@ q = TextBoxControl.new(w, 7, [10, 12])
 w.new_control q
 q.enabled = true
 
+b = ButtonControl.new(w, [10, 8])
+w.new_control b
+b.enabled = true
+
 w.refresh
 
 inrouter = InputRouter.new(w)
@@ -34,10 +38,19 @@ inrouter.bindings do
 	bind_key(:down_arrow) do
 		focus_next
 	end
+  
+  bind_key(:p) do
+    current_control.interact
+  end
+
 	bind_key(:enter) do
-		capture_all_input :until => :escape do
-			feed_through 
-		end
+    if current_control.input_focus
+      capture_all_input :until => :escape do
+        feed_through 
+      end
+    else
+      current_control.interact
+    end
 	end
 end
 
