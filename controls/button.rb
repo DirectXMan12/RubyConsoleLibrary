@@ -26,12 +26,12 @@ module RubyConsoleLibrary
     def make_template
       d = @dims
       if d[0] == :auto then d[0] = @text.length + 4 end # | @text.length |
-      self.class.raw_template(@colors, @state).render(*d)
+      raw_template(@colors, @state).render(*d)
     end
 		#begin private overloaded methods...
 		private
 
-    def self.raw_template(style, k)
+    def raw_template(style, k)
       if @old_state != k
         @raw_template = nil
         @old_state = k
@@ -45,7 +45,7 @@ module RubyConsoleLibrary
     end
 
 		def do_gui(s_x,s_y, state=[:default,:default],opts=nil)
-			@gui_array = ConsoleControl.parse_template(@template, {:text => 'cheese'})
+			@gui_array = ConsoleControl.parse_template(@template, {:text => @text})
 			return @gui_array
 		end		
 

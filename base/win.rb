@@ -1,6 +1,4 @@
 module RubyConsoleLibrary
-	
-
 	class ConsoleWin
 		@dims = [0,0] #x,y
 		@buffer = []  #in row,column,tuple form 
@@ -24,6 +22,10 @@ module RubyConsoleLibrary
 			@key_state = [nil,nil] #tuple in format of [char, :state]
 			@control_stack = []
 		end	
+
+    def structure(&blk)
+      WindowBuilder.new(self).instance_eval(&blk)
+    end
 		
 		def dims
 			@dims

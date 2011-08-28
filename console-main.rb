@@ -42,6 +42,7 @@ require_relative 'controls/button.rb'
 
 # base application stuff
 require_relative 'base/app_main.rb' #'console-consoleapp-main.rb'
+require_relative 'base/win_builder.rb'
 require_relative 'base/win.rb' #'console-consolewin-main.rb'
 if VERSION =~ /1\.8\.6/ then require 'jcode' end #for str.each_char - should be present in 1.8.7 and up by default
 

@@ -1,31 +1,21 @@
 require './console-main.rb'
 include RubyConsoleLibrary
 
+#ConsoleApp.console_size = [80, 40]
+
 a = ConsoleApp.new
 #print ControlCode.escape(ControlCode.get_code(:foreground_red))
 w = a.wins[0]
 
-w.box 10,10, :background_blue
+w.box 47,20, :foreground_blue
 w.refresh
 
-#sleep 10
-#gets
-
-#w.box 20,20
-
-w.refresh
-
-t = TextBoxControl.new(w, 5, [10, 4])
-w.new_control t
-t.enabled = true
-
-q = TextBoxControl.new(w, 7, [10, 12])
-w.new_control q
-q.enabled = true
-
-b = ButtonControl.new(w, [10, 8])
-w.new_control b
-b.enabled = true
+w.structure do 
+  textbox 27, [10,5]
+  
+  button [10,10], :text => 'OK'
+  button [27,10], :text => 'Cancel'
+end
 
 w.refresh
 
@@ -55,7 +45,7 @@ inrouter.bindings do
 end
 
 instr = ""
-while (instr != "x")
+while (instr != "`")
 	#sleep 4
 	#w.write(instr)
 	w.refresh
