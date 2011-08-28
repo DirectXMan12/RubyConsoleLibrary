@@ -8,8 +8,8 @@ h3. [-note: not yet ruby 1.9 compatible-] [+Now working with Ruby 1.9!+]
 h2. - Requirements/Installation -
 
 * if you are on Windows, and are using the default command prompt (or powershell, etc), you must install win32console for this library to work correctly - it adds standard ANSI support to the windows console
-* [-if you are on another platform, comment out the "require 'win32console'" line, however, do note that this has not been tested yet on linux, etc, however,-] [+RubyConsoleLibrary will automatically detect a windows installation, as+] the aim is to eventually ensure that it is automatically cross-platform (which ncurses isn't really...)
-* [-finally, you may wish to comment out "require 'ruby-debug'-]
+* RubyConsoleLibrary will automatically detect a windows installation as the aim is to eventually ensure that it is automatically and simply cross-platform
+* Currently non-Windows platforms require the use of _Unicode_ (I am working on correcting this, but for the moment Unicode is the easiest remedy to most installs of Linux having no CP437)
 
 h2. - Usage -
 
@@ -23,46 +23,50 @@ see the file "tester.rb" in the root directory, as well as below
 bc.. require 'console-main.rb'
 include RubyConsoleLibrary
 
-a = ConsoleApp.new                      # initialize a new application
-w = a.wins[0]                           # acquire the "handle" for the window automatically created above
-                                        #    (note: syntax for the "box" command may change shortly)
-w.box 10,10, :background_blue           # create a 10 x 10 box, with a border of white on blue
+a = ConsoleApp.new                                        # create a new application (don't forget to cleanup afterwards!)
+w = a.wins[0]                                             # get the default window
 
-w.refresh                               # refresh the screen to display the window at the console
-                                        #    (note: this will probably soon be a call to the application, not the window)
+w.box 47,20, :foreground_blue                             # draw a blue box around our window (starts at window corner, size 47x20)
+w.refresh                                                 # refresh the view
 
-t = TextBoxControl.new(w, 5, [10, 4])   # create a new text box with the window "w" as the parent, that is 5 characters wide, at the position (10, 4)
-                                        #    (note: this will soon be called in the manner of w.text_box...)
-w.new_control t                         # add the control to "w"
-t.enabled = true                        # and enable it
+w.structure do                                            # define our window's controls 
+  textbox 27, [10,5]                                      # a 27-character-wide textbox at (10,5) in our window
+  
+  button [10,10], :text => 'OK'                           # an automatically-sized button labeled 'OK' at (10,10)
+  button [27,10], :text => 'Cancel'
+end
 
-q = TextBoxControl.new(w, 7, [10, 12])  # same as above
-w.new_control q
-q.enabled = true
+w.refresh
 
-w.refresh 
+inrouter = InputRouter.new(w)                             # initialize an input router to help deal with input to our window
 
-inrouter = InputRouter.new(w)           # create an input router, which handles application input for the window "w"
-
-inrouter.bindings do                    # define the input "routes" with a DSL
-	bind_key(:up_arrow) do          # make the up arrow...
-		focus_prev              # ...shift focus to the previous control in "w"'s control stack
+inrouter.bindings do                                      # route input events as such:
+	bind_key(:up_arrow) do                                  # bind the up arrow key to 
+		focus_prev                                            #         focus on the previous control
 	end
 	bind_key(:down_arrow) do
 		focus_next
 	end
-	bind_key(:enter) do             # make enter signify that all input (via capture_all_input) send all input to the currently focused control (implied in feed_through) until the escape key is pressed (note: exceptions can be specified with :except => [:a,:b,:up_arrow])
-		capture_all_input :until => :escape do
-			feed_through 
-		end
+  
+  bind_key(:p) do                                         # bind the 'p' key to
+    current_control.interact                              #         interact with the current control
+  end
+
+	bind_key(:enter) do                                     # bind the enter key to
+    if current_control.input_focus                        #         either, a) if the current control accepts text input
+      capture_all_input :until => :escape do              #                    capture input until the escape key is pressed
+        feed_through                                      #                    and feed it through to the current control (by default)
+    else                                                  #                 b) or if the current control does not accept text input
+      current_control.interact                            #                    just interact with it
+    end
 	end
 end
 
-instr = ""
-while (instr != "x")                   # exit the app on pressing the "x" key
-	w.refresh                      # refresh the window
-	instr = Utils.getch(false)     # get a single character without constraining the input to letter characters
-	inrouter.handle_input(instr)   # handle the resulting input
-
+instr = ""                                                # under the hood actual input-capture loop, to be simplified soon
+while (instr != "`")                                      # while '`' isn't pressed...
+	w.refresh                                               #                   refresh the window
+	instr = Utils.getch(false)                              #                   get a single unfiltered character, blocking
+	inrouter.handle_input(instr)                            #                   (it may be 'chord characters', like the arrow keys)
+                                                          #                   and send it to the input router
 end
-a.cleanup                              # cleanup the console before exiting (deals with character sets, cancels ANSI effects, etc)
+a.cleanup                                                 # cleanup (restore cursor, font options, etc)
