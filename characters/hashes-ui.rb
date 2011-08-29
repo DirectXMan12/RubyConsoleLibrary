@@ -28,6 +28,23 @@ module RubyConsoleLibrary
           :right_t => "\xB4",
           :cross => "\xC5"
         },
+        :lightline => { # filler -- just the same as normal line, for compat with unicode mode
+          :curved_corner_top_right => "\xBF",
+          :curved_corner_bottom_right => "\xD9",
+          :curved_corner_top_left => "\xDA",
+          :curved_corner_bottom_left => "\xC0",
+          :side => "\xB3",
+          :corner_top_right => "\xBF",
+          :corner_bottom_right => "\xD9",
+          :corner_top_left => "\xDA",
+          :corner_bottom_left => "\xC0",
+          :bottom => "\xC4",
+          :top_t => "\xC2",
+          :bottom_t => "\xC1",
+          :left_t => "\xC3",
+          :right_t => "\xB4",
+          :cross => "\xC5"
+        },
         :nav => {
           :scroll_left => "\x11",
           :scroll_right => "\x10",
