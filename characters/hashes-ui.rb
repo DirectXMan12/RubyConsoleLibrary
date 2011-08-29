@@ -76,6 +76,23 @@ module RubyConsoleLibrary
           :right_t => "\u252B",
           :cross => "\u254B"
         },
+        :lightline => { # unicode-only
+          :curved_corner_top_right => "\u256E",
+          :curved_corner_bottom_right => "\u256F",
+          :curved_corner_top_left => "\u256D",
+          :curved_corner_bottom_left => "\u2570",
+          :side => "\u2502",
+          :corner_top_right => "\u2510",
+          :corner_bottom_right => "\u2518",
+          :corner_top_left => "\u250C",
+          :corner_bottom_left => "\u2514",
+          :bottom => "\u2500",
+          :top_t => "\u252C",
+          :bottom_t => "\u2534",
+          :left_t => "\u251C",
+          :right_t => "\u2524",
+          :cross => "\u253C"
+        },
         :nav => {
           :scroll_left => "\u25C4", # left black pointer
           :scroll_right => "\u25BA", # right black pointer

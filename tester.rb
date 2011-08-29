@@ -44,6 +44,7 @@ inrouter.bindings do
 	end
 end
 
+Utils.noecho
 instr = ""
 while (instr != "`")
 	#sleep 4
@@ -53,4 +54,5 @@ while (instr != "`")
 	inrouter.handle_input(instr)
 
 end
+Utils.echo
 a.cleanup

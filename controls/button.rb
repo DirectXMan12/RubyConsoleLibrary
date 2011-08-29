@@ -38,9 +38,9 @@ module RubyConsoleLibrary
       end
 
       @raw_template ||= ControlTemplate.define do
-        line [style[k][:border], UI[:line_corner_top_left]], exp([style[k][:border], UI[:line_bottom]]), [style[k][:border], UI[:line_corner_top_right]]
-        line [style[k][:border], UI[:line_side]], [style[k][:interior], ' '], exp([style[k][:interior],'!:text']), [style[k][:interior], ' '], [style[k][:border], UI[:line_side]]
-        line [style[k][:border], UI[:line_corner_bottom_left]], exp([style[k][:border], UI[:line_bottom]]), [style[k][:border], UI[:line_corner_bottom_right]]
+        line [style[k][:border], UI[:lightline_curved_corner_top_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_curved_corner_top_right]]
+        line [style[k][:border], UI[:lightline_side]], [style[k][:interior], ' '], exp([style[k][:interior],'!:text']), [style[k][:interior], ' '], [style[k][:border], UI[:lightline_side]]
+        line [style[k][:border], UI[:lightline_curved_corner_bottom_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_curved_corner_bottom_right]]
       end
     end
 

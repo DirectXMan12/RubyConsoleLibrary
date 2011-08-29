@@ -5,6 +5,24 @@ module RubyConsoleLibrary
 			@@windows_f[:getch] = Win32API.new("msvcrt","_getch",[],"I")
 		end
 
+    def Utils.method_missing(name, *params)
+      if WINDOWS then return false end
+      @@current_tty ||= {}
+
+      opts = name.to_s.split('_')
+      command_str = opts.map {|opt| if (opt.start_with? 'no') then '-'+opt[2..-1] else opt end }.reduce("stty") {|acc,str| acc += ' ' + str}
+      system(command_str)
+      
+      opts.each do |opt|
+        if opt.start_with?('no')
+          @@current_tty[opt[2..-1].to_sym] = false
+        else
+          @@current_tty[opt.to_sym] = true
+        end
+      end
+      return @@current_tty
+    end
+
 		def Utils.getch(filter=true)
 			is_special_key = false
 			if WINDOWS == true
@@ -30,8 +48,11 @@ module RubyConsoleLibrary
 						c = :enter
 				end
 			else
+        @@current_tty ||= {}
+        echo_was_on = (@@current_tty[:echo] != false) # assume on by default
+        raw_was_on = @@current_tty[:raw] # assume off by default
 				begin
-					system("stty raw -echo")
+          unless raw_was_on && !echo_was_on then system("stty #{unless raw_was_on then 'raw ' end}#{if echo_was_on then '-echo' end}") end
 					n = STDIN.getbyte
           if n == 27 
             begin
@@ -65,7 +86,7 @@ module RubyConsoleLibrary
             c = :enter
           end
 				ensure
-					system("stty -raw echo")
+          unless raw_was_on && !echo_was_on then system("stty #{unless raw_was_on then '-raw ' end}#{if echo_was_on then 'echo' end}") end
 				end
 			end
 
