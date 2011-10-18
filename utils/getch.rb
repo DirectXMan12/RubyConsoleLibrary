@@ -1,9 +1,9 @@
 module RubyConsoleLibrary
-	class Utils	
-		if WINDOWS == true
-			@@windows_f = {}
-			@@windows_f[:getch] = Win32API.new("msvcrt","_getch",[],"I")
-		end
+  class Utils 
+    if WINDOWS == true
+      @@windows_f = {}
+      @@windows_f[:getch] = Win32API.new("msvcrt","_getch",[],"I")
+    end
 
     def Utils.method_missing(name, *params)
       if WINDOWS then return false end
@@ -23,37 +23,37 @@ module RubyConsoleLibrary
       return @@current_tty
     end
 
-		def Utils.getch(filter=true)
-			is_special_key = false
-			if WINDOWS == true
-				n = @@windows_f[:getch].Call
-				case n
-					when 0xE0
-						n = @@windows_f[:getch].Call
-						is_special_key = true
-						c = case n
-									when 0x4B then :left_arrow
-									when 0x4D then :right_arrow
-									when 0x50 then :down_arrow
-									when 0x48 then :up_arrow
-								end
-					when 0x08
-						is_special_key = true
-						c = :backspace
-					when 0x1B
-						is_special_key = true
-						c = :escape
-					when 0x0D
-						is_special_key = true
-						c = :enter
-				end
-			else
+    def Utils.getch(filter=true)
+      is_special_key = false
+      if WINDOWS == true
+        n = @@windows_f[:getch].Call
+        case n
+          when 0xE0
+            n = @@windows_f[:getch].Call
+            is_special_key = true
+            c = case n
+                  when 0x4B then :left_arrow
+                  when 0x4D then :right_arrow
+                  when 0x50 then :down_arrow
+                  when 0x48 then :up_arrow
+                end
+          when 0x08
+            is_special_key = true
+            c = :backspace
+          when 0x1B
+            is_special_key = true
+            c = :escape
+          when 0x0D
+            is_special_key = true
+            c = :enter
+        end
+      else
         @@current_tty ||= {}
         echo_was_on = (@@current_tty[:echo] != false) # assume on by default
         raw_was_on = @@current_tty[:raw] # assume off by default
-				begin
+        begin
           unless raw_was_on && !echo_was_on then system("stty #{unless raw_was_on then 'raw ' end}#{if echo_was_on then '-echo' end}") end
-					n = STDIN.getbyte
+          n = STDIN.getbyte
           if n == 27 
             begin
               n2 = STDIN.read_nonblock(1).getbyte(0)
@@ -85,23 +85,23 @@ module RubyConsoleLibrary
             is_special_key = true
             c = :enter
           end
-				ensure
+        ensure
           unless raw_was_on && !echo_was_on then system("stty #{unless raw_was_on then '-raw ' end}#{if echo_was_on then 'echo' end}") end
-				end
-			end
+        end
+      end
 
-			unless is_special_key
-			 	c = " "
-				c.setbyte(0,n)
-			end
-			
-			if filter == true && (n > 122 || n < 97)
-				c = ""
-			end	
+      unless is_special_key
+        c = " "
+        c.setbyte(0,n)
+      end
+      
+      if filter == true && (n > 122 || n < 97)
+        c = ""
+      end 
 
-			return c
-		end
+      return c
+    end
 
-	end
+  end
 end
 

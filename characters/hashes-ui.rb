@@ -1,5 +1,5 @@
 module RubyConsoleLibrary
-	class UI
+  class UI
     unless IS_UNICODE
       @@chars = {
         :window => {
@@ -58,6 +58,18 @@ module RubyConsoleLibrary
           :smile_pos => "\x02",
           :music_note => "\x0E",
           :gear => "\x0F"
+        },
+        :block => {
+          :transparent_step_1 => "\xB0",
+          :transparent_step_2 => "\xB1",
+          :transparent_step_3 => "\xB2",
+          :opaque_full => "\xDB",
+          :opaque_bottom_half => "\xDC",
+          :opaque_top_half => "\xDF",
+          :opaque_left_half => "\xDD",
+          :opaque_right_half => "\xDE"
+          # begin unicode compat filler
+
         },
         :special => {
           :bell => "\x07"
@@ -122,13 +134,29 @@ module RubyConsoleLibrary
           :smile_neg => "\u263B",
           :smile_pos => "\u263A",
           :music_note => "\u266A",
-          :gear => "\u2699"
+          :gear => "\u2699",
+          :square => "\u25A1", # WARNING: no non-unicode version
+          :square_with_subsquare => "\u25A3" # WARNING: no non-unicode version
         },
         :special => {
           :bell => "\u0007"
+        },
+        :block => {
+          :transparent_step_1 => "\u2591",
+          :transparent_step_2 => "\u2592",
+          :transparent_step_3 => "\u2593",
+          :full => "\u2588",
+          :top_half => "\u2580",
+          :botttom_half => "\u2584",
+          :left_half => "\u258C",
+          :right_half => "\u2590",
+          # corner blocks are unicode-specific
+          :corner_top_right => "\u259C",
+          :corner_bottom_right => "\u259F",
+          :corner_top_left => "\u259B",
+          :corner_bottom_left => "\u2599"
         }
-
       }
     end
-	end
+  end
 end
