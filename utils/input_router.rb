@@ -88,15 +88,15 @@ module RubyConsoleLibrary
       opts[:except] ||= []
       unless (opts[:except].is_a?(Array)) then opts[:except] = [opts[:except]] end 
 
-      if (!opts[:until] && opts[:except] != :existing_bindings) then raise 'you must have a release key' end
+      if (!opts[:until] && !opts[:except].include?(:existing_bindings)) then raise 'you must have a release key'+opts.to_s end
 
       @backup_bindings = @key_bindings.clone
-      unless opts[:except] == :existing_bindings
+      unless opts[:except].include?(:existing_bindings)
         @key_bindings.delete_if do |k, v|
           !opts[:except].include?(k.to_sym)
         end
       end
-      @key_bindings[opts[:until].to_sym] = Proc.new { release_input }
+      if opts[:until] then @key_bindings[opts[:until].to_sym] = Proc.new { release_input } end
 
       if (!block.nil?)
         @handle_callback = block

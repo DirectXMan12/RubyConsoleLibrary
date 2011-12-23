@@ -1,3 +1,4 @@
+#!./ruby
 require './console-main.rb'
 include RubyConsoleLibrary
 

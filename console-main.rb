@@ -37,6 +37,7 @@ require_relative 'characters/utils.rb' #'console-characters-utils.rb'
 # controls
 require_relative 'controls/base.rb' #'console-controls-base.rb'
 require_relative 'controls/templater.rb' #'console-controls-templater.rb'
+require_relative 'controls/mixins/pressable.rb'
 require_relative 'controls/textbox.rb' #'console-controls-maincontrols.rb'
 require_relative 'controls/button.rb'
 
@@ -44,7 +45,11 @@ require_relative 'controls/button.rb'
 require_relative 'base/app_main.rb' #'console-consoleapp-main.rb'
 require_relative 'base/win_builder.rb'
 require_relative 'base/win.rb' #'console-consolewin-main.rb'
-if VERSION =~ /1\.8\.6/ then require 'jcode' end #for str.each_char - should be present in 1.8.7 and up by default
+
+# version checking
+v = VERSION.split('.').map {|n| n.to_i}
+ver = v[0]*1000000 + v[1]*1000 + v[2];
+if ver < 1008006 then require 'jcode' end #for str.each_char - should be present in 1.8.7 and up by default
 
 module RubyConsoleLibrary
   
