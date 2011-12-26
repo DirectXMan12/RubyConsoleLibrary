@@ -13,60 +13,64 @@ h2. - Requirements/Installation -
 
 h2. - Usage -
 
-require 'console-main.rb'
-include RubyConsoleLibrary
-
-h2. - Example -
-
-see the file "tester.rb" in the root directory, as well as below
-
-bc.. require 'console-main.rb'
-include RubyConsoleLibrary
-
-a = ConsoleApp.new                                        # create a new application (don't forget to cleanup afterwards!)
-w = a.wins[0]                                             # get the default window
-
-w.box 47,20, :foreground_blue                             # draw a blue box around our window (starts at window corner, size 47x20)
-w.refresh                                                 # refresh the view
-
-w.structure do                                            # define our window's controls 
-  textbox 27, [10,5]                                      # a 27-character-wide textbox at (10,5) in our window
-  
-  button [10,10], :text => 'OK'                           # an automatically-sized button labeled 'OK' at (10,10)
-  button [27,10], :text => 'Cancel'
-end
-
-w.refresh
-
-inrouter = InputRouter.new(w)                             # initialize an input router to help deal with input to our window
-
-inrouter.bindings do                                      # route input events as such:
-	bind_key(:up_arrow) do                                  # bind the up arrow key to 
-		focus_prev                                            #         focus on the previous control
-	end
-	bind_key(:down_arrow) do
-		focus_next
-	end
-  
-  bind_key(:p) do                                         # bind the 'p' key to
-    current_control.interact                              #         interact with the current control
-  end
-
-	bind_key(:enter) do                                     # bind the enter key to
-    if current_control.input_focus                        #         either, a) if the current control accepts text input
-      capture_all_input :until => :escape do              #                    capture input until the escape key is pressed
-        feed_through                                      #                    and feed it through to the current control (by default)
-    else                                                  #                 b) or if the current control does not accept text input
-      current_control.interact                            #                    just interact with it
-    end
-	end
-end
-
-instr = ""                                                # under the hood actual input-capture loop, to be simplified soon
-while (instr != "`")                                      # while '`' isn't pressed...
-	w.refresh                                               #                   refresh the window
-	instr = Utils.getch(false)                              #                   get a single unfiltered character, blocking
-	inrouter.handle_input(instr)                            #                   (it may be 'chord characters', like the arrow keys)
-                                                          #                   and send it to the input router
-end
-a.cleanup                                                 # cleanup (restore cursor, font options, etc)
+bc.. ruby
+require './console-main.rb'                                      
+include RubyConsoleLibrary                                
+                                                             
+quit_app = false # predefined so can set later            
+                                                          
+a = ConsoleApp.new                                                                 # create a new application (don't forget to cleanup afterwards!)                
+w = a.wins[0]                                                                      # get the default window
+                                                                                                                                                                   
+w.box 47,20, :foreground_blue                                                      # draw a blue box around our window (starts at window corner, size 47x20)
+w.refresh                                                                          # refresh the view
+                                                                                                                                                                   
+w.structure do                                                                     # define our window's controls 
+  t = textbox 27, [10,5]                                                           # a 27-character-wide textbox at (10,5) in our window
+                                                                                                                                                                   
+  ok = button [10,10], :text => 'OK'                                               # an automatically-sized button labeled 'OK' at (10,10)
+  cancel = button [27,10], :text => 'Cancel'                                                                                                                       
+  l = label [15, 15], :text => ' '                                                                                                                                 
+                                                                                                                                                                   
+  cancel.on_press do                                                               # set the on_press action, which triggers upon 'interaction' with the control
+    quit_app = true                                                                                                                                                
+  end                                                                              
+                                                                                   
+  ok.on_press do                                                                   
+    l.text = t.current_text                                                        
+  end                                                                              
+end                                                                                                                                                                
+                                                                                                                                                                   
+w.refresh                                                                                                                                                          
+                                                                                                                                                                   
+inrouter = InputRouter.new(w)                                                      # initialize an input router to help deal with input to our window                                                                                
+inrouter.bindings do                                                               # route input events as such:
+  bind_key(:up_arrow) do                                                           # bind the up arrow key to                                                        
+    focus_prev                                                                     #         focus on the previous control                                           
+  end                                                                              
+  bind_key(:down_arrow) do                                                         
+    focus_next                                                                     
+  end                                                                              
+                                                                                   
+  bind_key(:ctrl_e) do                                                            # Ctrl-e will exit now 
+    quit_app = true                                                                                                                                                
+  end                                                                                                                                                              
+                                                                                                                                                                   
+  bind_key(:enter) do                                                              # bind the enter key to
+    unless current_control.input_focus then current_control.interact end           #         interact with the current control unless the current control 
+  end                                                                              #         grabs text input (like the text box control)  
+                                                                                                                                                                 
+  capture_all_input :except => :existing_bindings do                               # capture all other keys and feed them to the current control if the 
+    if current_control.input_focus then feed_through end                           #         current control grabs text input 
+  end                                                                                      
+end                                                                                        
+                                                                                           
+Utils.noecho                                                                       
+while (!quit_app)                                                                  # under the hood actual input-capture loop, to be simplified soon
+  w.refresh                                                                        #         refresh the window
+  instr = Utils.getch(false)                                                       #         get a single unfiltered character, blocking
+  inrouter.handle_input(instr)                                                     #         (it may be a 'chord character', like the arrow keys)
+end                                                                                #         and send it to the input router
+Utils.echo                                                                         
+a.cleanup                                                                                                                                                  
+                                                                                   # cleanup (restore cursor, font options, etc)                           

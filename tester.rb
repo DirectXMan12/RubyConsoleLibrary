@@ -2,7 +2,7 @@
 require './console-main.rb'
 include RubyConsoleLibrary
 
-instr = "" # predefined so can set later
+quit_app = false # predefined so can set later
 
 a = ConsoleApp.new
 w = a.wins[0]
@@ -18,7 +18,7 @@ w.structure do
   l = label [15, 15], :text => ' '
 
   cancel.on_press do 
-    instr = "`"
+    quit_app = true
   end
 
   ok.on_press do
@@ -38,6 +38,10 @@ inrouter.bindings do
     focus_next
   end
 
+  bind_key(:ctrl_e) do
+    quit_app = true
+  end
+
   bind_key(:enter) do
     unless current_control.input_focus then current_control.interact end
   end
@@ -48,7 +52,7 @@ inrouter.bindings do
 end
 
 Utils.noecho
-while (instr != "`")
+while (!quit_app)
   w.refresh
   instr = Utils.getch(false)
   inrouter.handle_input(instr)

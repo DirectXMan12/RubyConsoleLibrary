@@ -84,6 +84,9 @@ module RubyConsoleLibrary
           elsif n == 13
             is_special_key = true
             c = :enter
+          elsif (0..26).include? n
+            is_special_key = true
+            c = ("ctrl_"+(96+n).chr).to_sym
           end
         ensure
           unless raw_was_on && !echo_was_on then system("stty #{unless raw_was_on then '-raw ' end}#{if echo_was_on then 'echo' end}") end
