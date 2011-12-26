@@ -13,8 +13,7 @@ h2. - Requirements/Installation -
 
 h2. - Usage -
 
-bc.. ruby
-require './console-main.rb'                                      
+bc[ruby].. require './console-main.rb'                                      
 include RubyConsoleLibrary                                
                                                              
 quit_app = false # predefined so can set later            
