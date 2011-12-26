@@ -50,7 +50,7 @@ module RubyConsoleLibrary
 
     def interact
       return nil unless @interactable && @enabled 
-      do_interact
+      _do_interact
     end
 
     def hover
@@ -137,6 +137,11 @@ module RubyConsoleLibrary
       t[@dims[1]-1][@dims[0]-1] = [style, UI[(type_prefix.to_s + '_corner_bottom_right').to_sym]]
 
       return t
+    end
+
+    #internal methods - these should be replaced by mixin methods
+    def _do_interact
+      do_interact
     end
 
     #internal methods - these should be replaced by actual control methods

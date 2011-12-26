@@ -64,6 +64,7 @@ module RubyConsoleLibrary
 
     def new_control(c)
       @control_stack << c
+      return c
     end
 
     def remove_control(c)

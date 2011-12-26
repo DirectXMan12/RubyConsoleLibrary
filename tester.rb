@@ -2,6 +2,8 @@
 require './console-main.rb'
 include RubyConsoleLibrary
 
+instr = "" # predefined so can set later
+
 a = ConsoleApp.new
 w = a.wins[0]
 
@@ -11,8 +13,12 @@ w.refresh
 w.structure do 
   textbox 27, [10,5]
   
-  button [10,10], :text => 'OK'
-  button [27,10], :text => 'Cancel'
+  ok = button [10,10], :text => 'OK'
+  cancel = button [27,10], :text => 'Cancel'
+
+  cancel.on_press do 
+    instr = "`"
+  end
 end
 
 w.refresh
@@ -37,7 +43,6 @@ inrouter.bindings do
 end
 
 Utils.noecho
-instr = ""
 while (instr != "`")
   w.refresh
   instr = Utils.getch(false)
