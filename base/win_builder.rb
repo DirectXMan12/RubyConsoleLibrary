@@ -17,6 +17,12 @@ module RubyConsoleLibrary
       @window.new_control c
     end
 
+    def label(loc, opts={})
+      c = LabelControl.new(@window, loc, opts)
+      c.enabled = false
+      @window.new_control c
+    end
+
     # TODO: method_missing, look in controls class
   end
 end

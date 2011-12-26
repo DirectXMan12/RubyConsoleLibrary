@@ -40,6 +40,7 @@ require_relative 'controls/templater.rb' #'console-controls-templater.rb'
 require_relative 'controls/mixins/pressable.rb'
 require_relative 'controls/textbox.rb' #'console-controls-maincontrols.rb'
 require_relative 'controls/button.rb'
+require_relative 'controls/label.rb'
 
 # base application stuff
 require_relative 'base/app_main.rb' #'console-consoleapp-main.rb'

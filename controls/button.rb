@@ -1,5 +1,7 @@
 module RubyConsoleLibrary
   class ButtonControl < ConsoleControl    
+    include ControlMixins::Pressable
+
     def initialize (parent_window, pos, attrs={})
       opts = {:pressed => {:border => [:foreground_brightgreen, :deco_bold], :interior => :deco_bold}, :released => {:border => :foreground_white, :interior => :none}, :hover => {:interior => :deco_bold, :border => :none}, :keeps_state => true, :state => :released, :text => 'Button', :width => :auto, :height => 3}.merge(attrs)
       super(parent_window, pos)
@@ -59,8 +61,5 @@ module RubyConsoleLibrary
       @template = self.make_template
       return @state.to_s #success!
     end 
-  end
-  class ButtonControl
-    include ControlMixins::Pressable
   end
 end

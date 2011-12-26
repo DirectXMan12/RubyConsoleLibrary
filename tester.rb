@@ -11,13 +11,18 @@ w.box 47,20, :foreground_blue
 w.refresh
 
 w.structure do 
-  textbox 27, [10,5]
+  t = textbox 27, [10,5]
   
   ok = button [10,10], :text => 'OK'
   cancel = button [27,10], :text => 'Cancel'
+  l = label [15, 15], :text => ' '
 
   cancel.on_press do 
     instr = "`"
+  end
+
+  ok.on_press do
+    l.text = t.current_text
   end
 end
 
