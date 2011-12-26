@@ -26,6 +26,7 @@ module RubyConsoleLibrary
     def Utils.getch(filter=true)
       is_special_key = false
       if WINDOWS == true
+        # TODO: make ctrl-lowercase_char work
         n = @@windows_f[:getch].Call
         case n
           when 0xE0

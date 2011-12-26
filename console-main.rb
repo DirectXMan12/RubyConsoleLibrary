@@ -24,6 +24,7 @@ end
 
 # misc utils
 require_relative 'utils/getch.rb' #'console-utils-main.rb'
+require_relative 'utils/console_detect.rb'
 require_relative 'utils/deep_copy.rb'
 require_relative 'utils/display_array.rb'
 require_relative 'utils/input_router.rb' #'console-input-router.rb'

@@ -3,7 +3,6 @@ module RubyConsoleLibrary
     @wins = []
     @textoptions = {}
     
-    @@console_size = [80,25] #x,y
     def ConsoleApp.console_size
       @@console_size
     end
@@ -35,6 +34,7 @@ module RubyConsoleLibrary
     end
 
     def initialize
+      @@console_size ||= Utils.terminal_dims || [80,25] 
       @wins = [ConsoleWin.new(@@console_size)]
       print ControlCode.char_conv (false)
       hide_cursor unless WINDOWS == true

@@ -7,7 +7,9 @@ quit_app = false # predefined so can set later
 a = ConsoleApp.new
 w = a.wins[0]
 
-w.box 47,20, :foreground_blue
+size = ConsoleApp.console_size
+
+w.box size[0]-1,size[1]-1, :foreground_blue
 w.refresh
 
 w.structure do 
