@@ -17,7 +17,7 @@ w.structure do
   
   ok = button [10,10], :text => 'OK'
   cancel = button [27,10], :text => 'Cancel'
-  l = label [15, 15], :text => ' '
+  l = label [15, 15], :text => ' ', :default => {:interior => :background_green, :border => :none}
 
   cancel.on_press do 
     quit_app = true

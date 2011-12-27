@@ -19,7 +19,7 @@ module RubyConsoleLibrary
         end
       end
 
-      @template = self.make_template
+      @template = make_template
       @state = :default
       @old_state = :default
     end
@@ -50,12 +50,14 @@ module RubyConsoleLibrary
         @raw_template = nil
       end
 
-      @raw_template ||= ControlTemplate.define do
-        if @show_border
-          line [style[k][:border], UI[:lightline_square_corner_top_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_square_corner_top_right]]
-        line [style[k][:border], UI[:lightline_side]], [style[k][:interior], ' '], exp([style[k][:interior],'!:text']), [style[k][:interior], ' '], [style[k][:border], UI[:lightline_side]]
-        line [style[k][:border], UI[:lightline_square_corner_bottom_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_square_corner_bottom_right]]
-        else
+      if @show_border
+        @raw_template ||= ControlTemplate.define do
+            line [style[k][:border], UI[:lightline_corner_top_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_corner_top_right]]
+          line [style[k][:border], UI[:lightline_side]], [style[k][:interior], ' '], exp([style[k][:interior],'!:text']), [style[k][:interior], ' '], [style[k][:border], UI[:lightline_side]]
+          line [style[k][:border], UI[:lightline_corner_bottom_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_corner_bottom_right]]
+        end
+      else
+        @raw_template ||= ControlTemplate.define do
           line exp([style[k][:interior], '!:text'])
         end
       end
