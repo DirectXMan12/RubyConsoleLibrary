@@ -60,6 +60,7 @@ module RubyConsoleLibrary
 
     def initialize (parent_window, s_x, pos=[1,1])
       super(parent_window, pos)
+
       @dims = [s_x, 3]
       #@template = Utils.display_array(@dims[0],@dims[1])
       #@template[1][1] = [:none, "!:test_letter"] #for test purposes
@@ -76,7 +77,6 @@ module RubyConsoleLibrary
     
     #begin private overloaded methods...
     private
-
     def self.raw_template(style)
       @current_ui_style ||= style
       unless @current_ui_style == style

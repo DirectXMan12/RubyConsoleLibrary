@@ -5,7 +5,9 @@ module RubyConsoleLibrary
     def initialize (parent_window, pos, attrs={})
       opts = {:pressed => {:border => [:foreground_brightgreen, :deco_bold], :interior => :deco_bold}, :released => {:border => :foreground_white, :interior => :none}, :hover => {:interior => :deco_bold, :border => :none}, :keeps_state => true, :state => :released, :text => 'Button', :width => :auto, :height => 3}.merge(attrs)
       super(parent_window, pos)
+
       @dims = [opts[:width], opts[:height]]
+      @text = opts[:text]
       @interactable = true
       @keeps_state = opts[:keeps_state]
       @state = opts[:state]
@@ -20,7 +22,6 @@ module RubyConsoleLibrary
         end
       end
 
-      @text = opts[:text]
       @template = self.make_template
     end
     
@@ -31,7 +32,6 @@ module RubyConsoleLibrary
     end
     #begin private overloaded methods...
     private
-
     def raw_template(style, k)
       if @old_state != k
         @raw_template = nil

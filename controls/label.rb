@@ -5,6 +5,7 @@ module RubyConsoleLibrary
       super(parent_window, pos)
 
       @dims = [opts[:width], opts[:height]]
+      @text = opts[:text]
       @interactable = false
       @show_border = opts[:show_border]
       @changed = true # update template?
@@ -18,7 +19,6 @@ module RubyConsoleLibrary
         end
       end
 
-      @text = opts[:text]
       @template = self.make_template
       @state = :default
       @old_state = :default

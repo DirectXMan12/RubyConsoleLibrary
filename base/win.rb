@@ -1,10 +1,10 @@
 module RubyConsoleLibrary
   class ConsoleWin
-    @dims = [0,0] #x,y
-    @buffer = []  #in row,column,tuple form 
-    @cursor = [0,0]
-    @key_state = [nil,nil]
-    @control_stack = []
+    #@dims = [0,0] #x,y
+    #@buffer = []  #in row,column,tuple form 
+    #@cursor = [0,0]
+    #@key_state = [nil,nil]
+    #@control_stack = []
 
     def cls
       print ConsoleApp.control_code "2J"
@@ -21,6 +21,7 @@ module RubyConsoleLibrary
       
       @key_state = [nil,nil] #tuple in format of [char, :state]
       @control_stack = []
+      @delta = {}
     end 
 
     def structure(&blk)
@@ -78,9 +79,9 @@ module RubyConsoleLibrary
       end
     end
 
-    def refresh
+    def unoptimized_refresh
       #cls
-      #instead of clearing the screen, just go back to 1,1 with cursor
+      #instead of clearing the screen, just go back to first desired position with cursor
       refresh_buffer
       print ControlCode.get_full([[:cursor_pos,1,1]])
       @buffer.each do |l|
@@ -96,6 +97,37 @@ module RubyConsoleLibrary
         print "\n"
       end
       #debugger
+    end
+
+    def draw_delta
+      @delta.each do |p,c|
+        print ControlCode.get_full [[:cursor_pos, p[0]+1, p[1]+1]]
+        print ControlCode.get_full(c[0]) unless c[0] == :none
+        print c[1]
+        print ControlCode.escape "0m" unless c[0] == :none
+      end
+
+      @delta = {} # reset delta
+    end
+    
+    def refresh
+      draw_delta
+      @control_stack.each do |w|
+        print ControlCode.get_full([[:cursor_pos, w.loc[1], w.loc[0]]])
+        buf = w.draw
+        buf.each_with_index do |l, ind|
+          print ControlCode.get_full([[:cursor_pos, w.loc[1]+ind, w.loc[0]]])
+          l.each do |c|
+            if !c.nil? && !c[1].nil? 
+              print ControlCode.get_full(c[0]) unless c[0] == :none
+              print c[1]
+              print ControlCode.escape "0m" unless c[0] == :none
+            else
+              print ' '
+            end
+          end
+        end
+      end
     end
 
     def display_obj(display_array)
@@ -124,37 +156,19 @@ module RubyConsoleLibrary
       end
     end
 
-    def box(s_x,s_y, text_opts=:none)
-      #debugger
-      #check for edge overflow - need to write code to check for edge underflow
-      if s_x + @cursor[0] > @dims[0]
-        s_x = @dims[0] - @cursor[0]
+    def box(s_x,s_y, style=:none)
+      w = ControlTemplate.define do
+        line [style, UI[:window_corner_top_left]], exp([style, UI[:window_bottom]]), [style, UI[:window_corner_top_right]]
+        line exp(:direction => :vert, :v => [[style, UI[:window_side]], exp(' '), [style, UI[:window_side]]])
+        line [style, UI[:window_corner_bottom_left]], exp([style, UI[:window_bottom]]), [style, UI[:window_corner_bottom_right]]
       end
-      if s_y + @cursor[1] > @dims[1]
-        s_y = @dims[1] - @cursor[1]
-      end
+      buf = w.render(s_x,s_y)
 
-      for l in @cursor[1]..(s_y - 1)
-        if l == @cursor[1]
-          @buffer[l][@cursor[0]] = [text_opts,UI[:window_corner_top_left]]
-        elsif l == s_y -1
-          @buffer[l][@cursor[0]] = [text_opts,UI[:window_corner_bottom_left]]
-        else
-          @buffer[l][@cursor[0]] = [text_opts,UI[:window_side]]
-        end
-        
-        #debugger
-        if l == 0 || l == s_y-1
-          #debugger
-          (s_x-2).times { |c| @buffer[l][@cursor[0]+c+1] = [text_opts,UI[:window_bottom]]}
-        end
-        
-        if l == @cursor[1]
-          @buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UI[:window_corner_top_right]]
-        elsif l == s_y - 1
-          @buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UI[:window_corner_bottom_right]]
-        else
-          @buffer[l][@cursor[0]+(s_x - 1)] = [text_opts,UI[:window_side]]
+      buf.each_with_index do |l, line_ind|
+        l.each_with_index do |c, char_ind|
+          unless c[0] == :none and (c[1] == ' ' || c[1] == '' || c[1].nil?)
+            @delta[[line_ind, char_ind]] = c
+          end
         end
       end
     end
