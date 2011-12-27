@@ -24,7 +24,7 @@ w.structure do
   end
 
   ok.on_press do
-    l.text = t.current_text
+    l.text = t.text
   end
 end
 

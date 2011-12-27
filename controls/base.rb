@@ -19,6 +19,10 @@ module RubyConsoleLibrary
       @loc = pos
     end
 
+    def dims
+      @dims.clone
+    end
+
     def owner
       @parent_window
     end
