@@ -99,6 +99,14 @@ module RubyConsoleLibrary
       #debugger
     end
 
+    def force_write_delta(loc, buf)
+      buf.each_with_index do |l, line_ind|
+        l.each_with_index do |c, char_ind|
+          @delta[[loc[1]+line_ind, loc[0]+char_ind]] = c
+        end
+      end
+    end
+
     def draw_delta
       @delta.each do |p,c|
         print ControlCode.get_full [[:cursor_pos, p[0]+1, p[1]+1]]

@@ -19,9 +19,10 @@ module RubyConsoleLibrary
         end
       end
 
-      @template = make_template
       @state = :default
       @old_state = :default
+      @old_dims = [0,0]
+      @template = make_template
     end
 
     def text
@@ -40,6 +41,14 @@ module RubyConsoleLibrary
       if @dims[0] == :auto then d[0] = @text.length + (if @show_border then 4 else 0 end) end
       if @dims[1] == 1 and @show_border then d[1] += 2 end
       @state ||= :default
+      if d[0] < @old_dims[0] || d[1] < @old_dims[1]
+        sp = (ControlTemplate.define do
+          line exp(:v => [exp(' ')])
+        end)
+        buf = sp.render(*@old_dims)
+        owner.force_write_delta @loc.map { |i| i - 1 }, buf
+      end
+      @old_dims = d.clone
       raw_template(@colors,@state).render(*d)
     end
 
@@ -52,7 +61,7 @@ module RubyConsoleLibrary
 
       if @show_border
         @raw_template ||= ControlTemplate.define do
-            line [style[k][:border], UI[:lightline_corner_top_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_corner_top_right]]
+          line [style[k][:border], UI[:lightline_corner_top_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_corner_top_right]]
           line [style[k][:border], UI[:lightline_side]], [style[k][:interior], ' '], exp([style[k][:interior],'!:text']), [style[k][:interior], ' '], [style[k][:border], UI[:lightline_side]]
           line [style[k][:border], UI[:lightline_corner_bottom_left]], exp([style[k][:border], UI[:lightline_bottom]]), [style[k][:border], UI[:lightline_corner_bottom_right]]
         end
