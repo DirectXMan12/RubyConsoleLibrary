@@ -39,7 +39,7 @@ require_relative 'characters/utils.rb' #'console-characters-utils.rb'
 require_relative 'controls/base.rb' #'console-controls-base.rb'
 require_relative 'controls/templater.rb' #'console-controls-templater.rb'
 require_relative 'controls/mixins/pressable.rb'
-require_relative 'controls/textbox_new.rb' #'console-controls-maincontrols.rb'
+require_relative 'controls/textbox.rb' #'console-controls-maincontrols.rb'
 require_relative 'controls/button.rb'
 require_relative 'controls/label.rb'
 
