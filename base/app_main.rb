@@ -44,6 +44,8 @@ module RubyConsoleLibrary
     def cleanup
       show_cursor unless WINDOWS == TRUE
       print ControlCode.escape "0m"
+      print ControlCode.get_full [[:cursor_pos, @@console_size[0], 0]]
+      print "\n"
     end
 
   end
