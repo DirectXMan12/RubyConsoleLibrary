@@ -4,11 +4,11 @@ module RubyConsoleLibrary
       opts = {:default => :none, :hover => [:deco_bold], :keeps_state => true, :state => :default, :text => 'Dropdown', :width => :auto, :height => 1, :dd_height => 4}.merge(attrs)
       super(parent_window, pos)
 
-      @dims = [opts[:width], opts[:height]]
+      @dims ||= [opts[:width], opts[:height]]
       @text = opts[:text]
       @interactable = true
       @keeps_state = opts[:keeps_state]
-      @state = opts[:state]
+      @state ||= opts[:state]
       @old_state = nil
       @dd_height = opts[:dd_height]
 
@@ -16,7 +16,7 @@ module RubyConsoleLibrary
       @template = self.make_template
 
       # create dropdown window
-      w = if @dims[0] == :auto then @text.length + 2 else @dims[0] end
+      w = if @dims[0] == :auto then @text.length + 2 else opts[:width] end
       @dd_win = PopupWin.new([w, @dd_height])
       @dd_win.box w, @dd_height, [:foreground_red, :deco_bold]
       @dd_win.loc = [@loc[0]-1, @loc[1]]

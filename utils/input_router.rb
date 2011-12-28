@@ -30,19 +30,21 @@ module RubyConsoleLibrary
     end
 
     def assume_control_list (stack)
-      @extra_control_stacks << @control_stack
+      @extra_control_stacks << [@control_stack,@stack_pos]
       @control_stack = stack
-      @stack_pos = 0
+      @stack_pos = unless stack.size < 2 then 1 else 0 end
     end
 
     def free_control_list
       unless @extra_control_stacks.size == 0
-        @control_stack = @extra_control_stacks.pop
+        @control_stack,@stack_pos = @extra_control_stacks.pop
       end
     end
 
     def total_free_control_list
-      @control_stack = @extra_control_stacks[0]
+      @control_stack = @extra_control_stacks[0][0]
+      @stack_pos = @extra_control_stacks[0][1]
+      @extra_control_stacks = []
     end
 
     def remove_binding(key)

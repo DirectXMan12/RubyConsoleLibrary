@@ -16,7 +16,7 @@ w.refresh
 ART_SIZE = art_size
 
 module RubyConsoleLibrary
-  class CellControl < ConsoleControl
+  class CellControl < DropdownControl #ConsoleControl
     def text
       @text
     end
@@ -30,9 +30,10 @@ module RubyConsoleLibrary
     end
 
     def initialize (parent_window, pos=[1,1], opts={})
-      super(parent_window, pos)
-      @style = {:blank => :none, :unfocused => :none, :hover => [:background_blue], :filled => [:foreground_green]}.merge(opts)
+      @state = :unfocused
+      @style = {:blank => :none, :unfocused => :none, :hover => [:background_blue, :deco_negative], :filled => [:foreground_green]}.merge(opts)
       @dims = [1,1]
+      super(parent_window, pos, opts.merge({:dd_height => 10, :width => 3}))
       @interactable = true
       @changed = true
       @text = ' '
@@ -81,16 +82,34 @@ module RubyConsoleLibrary
     end
 
     def do_interact
-      unless @have_input_focus then return false end # ignore button presses, etc
-      if owner.key_state[0] == :enter
-        # handle searching for special chars here 
-        puts 'hi'
+      unless @have_input_focus || owner.key_state[0] == nil then return false end # ignore button presses, etc
+      if owner.key_state[0] == nil
+        super
       elsif owner.key_state[0] == :backspace
         self.text = ' '
       elsif owner.key_state[0].kind_of? String
         self.text = owner.key_state[0]
       end
       return @state.to_s # success!
+    end
+  end
+
+  class MinbControl < ButtonControl
+    def make_template
+      d = @dims
+      if d[0] == :auto then d[0] = @text.length end # | @text.length |
+      raw_template(@colors, @state).render(*d)
+    end
+
+    def raw_template(style, k)
+      if @old_state != k
+        @raw_template = nil
+        @old_state = k
+      end
+     
+      @raw_template ||= ControlTemplate.define do
+        line exp([style[k][:interior],'!:text'])
+      end
     end
   end
 end
@@ -105,11 +124,17 @@ class String
   end
 end
 
+cell_arr = []
 w.structure do 
-  cell_arr = []
   (2..art_size).each do |row|
     (2..art_size).each do |col|
-      cell_arr << cell([row,col])
+      cell_arr << (c = cell([row,col]))
+      c.dd_win.structure do
+        (minb [2,2], :text => UI[:block_full]).on_press do
+          c.text = UI[:block_full]
+          c.input_router.instance_eval { focus_prev }
+        end
+      end
     end
   end
 
@@ -144,9 +169,13 @@ def calc_row(ind)
   ind % (ART_SIZE-1)
 end
 
-w.refresh
+a.refresh
 
 inrouter = InputRouter.new(w)
+
+cell_arr.each do |c|
+  c.input_router = inrouter
+end
 
 inrouter.bindings do
   bind_key(:up_arrow) do
@@ -177,6 +206,9 @@ inrouter.bindings do
 
   bind_key(:enter) do
     unless current_control.input_focus then current_control.interact end
+    if current_control.kind_of? CellControl
+      current_control.interact
+    end
   end
 
   capture_all_input :except => :existing_bindings do
@@ -186,7 +218,7 @@ end
 
 Utils.noecho
 while (!quit_app)
-  w.refresh
+  a.refresh
   instr = Utils.getch(false)
   inrouter.handle_input(instr)
 end
