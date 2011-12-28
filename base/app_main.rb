@@ -51,12 +51,12 @@ module RubyConsoleLibrary
     def erase_region (loc, dims)
       print ControlCode.get_full([[:cursor_pos,loc[1]+1,loc[0]+1]])
       print ControlCode.escape "0m"
-      (0..dims[1]-1).each do |i|
-        (0..dims[0]-1).each do |j|
+      (0..(dims[1]-1)).each do |i|
+        (0..(dims[0]-1)).each do |j|
           print ' '
           @app_delta << [loc[1]+1+i,loc[0]+1+j]
         end
-        print ControlCode.get_full([[:cursor_pos, loc[1]+1+i, loc[0]+1]])
+        print ControlCode.get_full([[:cursor_pos, loc[1]+1+i+1, loc[0]+1]])
       end
       redraw_delta_region
     end
@@ -70,8 +70,9 @@ module RubyConsoleLibrary
 
     def initialize
       @@console_size ||= Utils.terminal_dims || [80,25] 
-      @wins = [ConsoleWin.new(@@console_size)]
+      @wins = []
       @app_delta = []
+      self.add_win ConsoleWin.new(@@console_size)
       print ControlCode.char_conv (false)
       hide_cursor unless WINDOWS == true
       cls

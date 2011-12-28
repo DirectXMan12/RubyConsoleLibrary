@@ -42,6 +42,7 @@ require_relative 'controls/mixins/pressable.rb'
 require_relative 'controls/textbox.rb' #'console-controls-maincontrols.rb'
 require_relative 'controls/button.rb'
 require_relative 'controls/label.rb'
+require_relative 'controls/dropdown.rb'
 
 # base application stuff
 require_relative 'base/app_main.rb' #'console-consoleapp-main.rb'

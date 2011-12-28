@@ -12,11 +12,13 @@ size = ConsoleApp.console_size
 w.box size[0]-1,size[1]-1, :foreground_blue
 w.refresh
 
-dd = PopupWin.new([10,40])
-dd.loc = [10,20]
-dd.box 10,40, [:background_green, :foreground_green]
-dd.deactivate
-a.add_win dd
+# dd = PopupWin.new([10,40])
+# dd.loc = [10,20]
+# dd.box 10,40, [:background_green, :foreground_green]
+# dd.deactivate
+# a.add_win dd
+
+popup_trigger = nil
 
 w.structure do 
   t = textbox 27, [10,5]
@@ -25,7 +27,12 @@ w.structure do
   cancel = button [27,10], :text => 'Cancel'
   l = label [15, 15], :text => ' ', :default => {:interior => :background_green, :border => :none}
 
-  popup_trigger = button [10, 20], :text => 'Dropdown Trigger'
+  popup_trigger = dropdown [10, 20], :text => 'Dropdown Trigger', :dd_height => 8
+
+  popup_trigger.dd_win.structure do
+    button [4,2], :text => "A"
+    button [4,5], :text => "B"
+  end
 
   cancel.on_press do 
     quit_app = true
@@ -34,15 +41,12 @@ w.structure do
   ok.on_press do
     l.text = t.text
   end
-
-  popup_trigger.on_press do
-    unless dd.active? then dd.activate else dd.deactivate end
-  end
 end
 
 a.refresh
 
 inrouter = InputRouter.new(w)
+popup_trigger.input_router = inrouter
 
 inrouter.bindings do
   bind_key(:up_arrow) do

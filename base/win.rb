@@ -32,9 +32,17 @@ module RubyConsoleLibrary
     def parent_app=(p)
       @parent_app = p
     end
+
+    def parent_app
+      @parent_app
+    end
     
     def erase!
       @parent_app.erase_region @loc, @dims
+    end
+
+    def _control_stack
+      @control_stack
     end
 
     def activate
@@ -44,6 +52,9 @@ module RubyConsoleLibrary
         @bg.each do |l,c|
           next unless @delta[l].nil?
           @delta[l] = c 
+        end
+        @control_stack.each do |w|
+          w._redraw!
         end
       end
     end

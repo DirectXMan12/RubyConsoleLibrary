@@ -86,6 +86,10 @@ module RubyConsoleLibrary
     def redraw?
       @redraw == true
     end
+
+    def _redraw!
+      @redraw = true
+    end
     
     def redrawn
       @redraw = false

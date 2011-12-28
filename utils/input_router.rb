@@ -13,6 +13,7 @@ module RubyConsoleLibrary
       @stack_pos = 0
       @key_bindings = {}
       @pass_through_input = false
+      @extra_control_stacks = []
     end
 
     # accepts a string (or symbol) of a key, as well as a hash, which can be either :custom => Proc, :control => ConsoleControl,
@@ -26,6 +27,22 @@ module RubyConsoleLibrary
                                   else
                                     block
                                   end 
+    end
+
+    def assume_control_list (stack)
+      @extra_control_stacks << @control_stack
+      @control_stack = stack
+      @stack_pos = 0
+    end
+
+    def free_control_list
+      unless @extra_control_stacks.size == 0
+        @control_stack = @extra_control_stacks.pop
+      end
+    end
+
+    def total_free_control_list
+      @control_stack = @extra_control_stacks[0]
     end
 
     def remove_binding(key)

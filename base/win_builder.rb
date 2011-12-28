@@ -29,9 +29,6 @@ module RubyConsoleLibrary
       w = cl.new @window, *args, &blk
       w.enabled = true
       @window.new_control w
-    rescue NameError
-      raise "#{name.to_s} is not a type of control!"
-      nil
     end
   end
 end
