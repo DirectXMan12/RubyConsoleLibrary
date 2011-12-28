@@ -16,6 +16,7 @@ module RubyConsoleLibrary
       @enabled = true
       @interactable = true
       @receives_text = false
+      @redraw = true
       @loc = pos
     end
 
