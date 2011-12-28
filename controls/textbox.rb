@@ -57,7 +57,7 @@ module RubyConsoleLibrary
     end
 
     def make_template
-      raw_template(if @state == :hover then [:deco_bold, :foreground_brightwhite] else :none end).render(*@dims)
+      raw_template(if @state == :hover then [:deco_bold, :foreground_brightwhite] else [:foreground_white] end).render(*@dims)
     end
 
     # begin private overloaded methods
@@ -70,13 +70,13 @@ module RubyConsoleLibrary
         @changed = false
         @raw_template = ControlTemplate.define do
           line [style, UI[:line_corner_top_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_top_right]]
-          line [style, unless me.display_cursor > 0 then UI[:line_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:line_side] else UI[:nav_scroll_left] end]
+          line [style, unless me.display_cursor > 0 then UI[:line_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:line_side] else UI[:nav_scroll_right] end]
           line [style, UI[:line_corner_bottom_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_bottom_right]]
         end
       else
         @raw_template ||= ControlTemplate.define do
           line [style, UI[:line_corner_top_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_top_right]]
-          line [style, unless me.display_cursor > 0 then UI[:line_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:line_side] else UI[:nav_scroll_left] end]
+          line [style, unless me.display_cursor > 0 then UI[:line_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:line_side] else UI[:nav_scroll_right] end]
           line [style, UI[:line_corner_bottom_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_bottom_right]]
         end
       end
