@@ -82,6 +82,14 @@ module RubyConsoleLibrary
       return do_gui(@dims[0],@dims[1], [@state,new_state], all_opts)
     end
 
+    def redraw?
+      @redraw == true
+    end
+    
+    def redrawn
+      @redraw = false
+    end
+
     def ConsoleControl.parse_template(template_array, subs_hash)
       t_t = template_array.deep_copy
       s_h = subs_hash.deep_copy

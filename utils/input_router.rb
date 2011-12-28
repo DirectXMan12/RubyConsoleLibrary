@@ -83,6 +83,26 @@ module RubyConsoleLibrary
       current_control.hover
     end
 
+    def get_focus_pos
+      @stack_pos
+    end
+
+    def set_focus(pos)
+      if pos.kind_of? ConsoleControl then
+        raise "not yet implemented"
+      else
+        current_control.blur
+        if pos > @control_stack.length - 1
+          @stack_pos = @control_stack.length - 1
+        elsif pos < 0
+          @stack_pos = 0
+        else
+          @stack_pos = pos
+        end
+        current_control.hover
+      end
+    end
+
     # stops routing temporarily (use with controls like the text box)
     def capture_all_input(opts, &block)
       opts[:except] ||= []

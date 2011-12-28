@@ -33,6 +33,7 @@ module RubyConsoleLibrary
       @text = t
       @changed = true
       @template = make_template
+      @redraw = true
       @text
     end
 
@@ -45,7 +46,7 @@ module RubyConsoleLibrary
         sp = (ControlTemplate.define do
           line exp(:v => [exp(' ')])
         end)
-        buf = sp.render(*@old_dims)
+        
         owner.force_write_delta @loc.map { |i| i - 1 }, buf
       end
       @old_dims = d.clone
@@ -81,6 +82,7 @@ module RubyConsoleLibrary
      @state = if type == :hover then :hover else :default end
      @changed = true
      @template = make_template
+     @redraw = true
      @state.to_s
     end
 

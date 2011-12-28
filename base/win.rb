@@ -121,6 +121,8 @@ module RubyConsoleLibrary
     def refresh
       draw_delta
       @control_stack.each do |w|
+        next unless w.redraw?
+        w.redrawn
         print ControlCode.get_full([[:cursor_pos, w.loc[1], w.loc[0]]])
         buf = w.draw
         buf.each_with_index do |l, ind|

@@ -53,12 +53,14 @@ module RubyConsoleLibrary
     def do_hover(type=:hover)
       @state = if type == :hover then :hover else :released end
       @template = self.make_template
+      @redraw = true
       return @state.to_s
     end
 
     def do_interact
       @state = if @state == :pressed then :released else :pressed end
       @template = self.make_template
+      @redraw = true
       return @state.to_s #success!
     end 
   end

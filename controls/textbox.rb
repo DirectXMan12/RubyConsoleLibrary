@@ -8,6 +8,7 @@ module RubyConsoleLibrary
     def text=(t)
       @text = t.to_s
       @changed = true
+      @redraw = true
       @template = make_template
     end
 
@@ -39,6 +40,7 @@ module RubyConsoleLibrary
       if @display_cursor + @dims[0] - 2 > @text.length then @display_cursor = @text.length - @dims[0] + 2 end
       if @display_cursor < 0 then @display_cursor = 0 end
       @changed = true
+      @redraw = true
       @template = make_template
     end
 

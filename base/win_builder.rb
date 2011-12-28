@@ -23,6 +23,15 @@ module RubyConsoleLibrary
       @window.new_control c
     end
 
-    # TODO: method_missing, look in controls class
+    def method_missing(name, *args, &blk)
+      class_name = "#{name.to_s.capitalize}Control"
+      cl = RubyConsoleLibrary.const_get class_name
+      w = cl.new @window, *args, &blk
+      w.enabled = true
+      @window.new_control w
+    rescue NameError
+      raise "#{name.to_s} is not a type of control!"
+      nil
+    end
   end
 end
