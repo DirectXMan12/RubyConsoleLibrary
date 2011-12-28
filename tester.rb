@@ -12,12 +12,20 @@ size = ConsoleApp.console_size
 w.box size[0]-1,size[1]-1, :foreground_blue
 w.refresh
 
+dd = PopupWin.new([10,40])
+dd.loc = [10,20]
+dd.box 10,40, [:background_green, :foreground_green]
+dd.deactivate
+a.add_win dd
+
 w.structure do 
   t = textbox 27, [10,5]
   
   ok = button [10,10], :text => 'OK'
   cancel = button [27,10], :text => 'Cancel'
   l = label [15, 15], :text => ' ', :default => {:interior => :background_green, :border => :none}
+
+  popup_trigger = button [10, 20], :text => 'Dropdown Trigger'
 
   cancel.on_press do 
     quit_app = true
@@ -26,9 +34,13 @@ w.structure do
   ok.on_press do
     l.text = t.text
   end
+
+  popup_trigger.on_press do
+    unless dd.active? then dd.activate else dd.deactivate end
+  end
 end
 
-w.refresh
+a.refresh
 
 inrouter = InputRouter.new(w)
 
@@ -55,7 +67,7 @@ end
 
 Utils.noecho
 while (!quit_app)
-  w.refresh
+  a.refresh
   instr = Utils.getch(false)
   inrouter.handle_input(instr)
 end

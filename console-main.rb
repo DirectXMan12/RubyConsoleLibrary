@@ -47,6 +47,7 @@ require_relative 'controls/label.rb'
 require_relative 'base/app_main.rb' #'console-consoleapp-main.rb'
 require_relative 'base/win_builder.rb'
 require_relative 'base/win.rb' #'console-consolewin-main.rb'
+require_relative 'base/popup_win.rb'
 
 # version checking
 v = VERSION.split('.').map {|n| n.to_i}

@@ -6,6 +6,8 @@ module RubyConsoleLibrary
     #@key_state = [nil,nil]
     #@control_stack = []
 
+    attr_accessor :loc
+
     def cls
       print ConsoleApp.control_code "2J"
     end
@@ -22,7 +24,39 @@ module RubyConsoleLibrary
       @key_state = [nil,nil] #tuple in format of [char, :state]
       @control_stack = []
       @delta = {}
+      @bg = {}
+      @active = true
+      @loc = [0,0]
     end 
+
+    def parent_app=(p)
+      @parent_app = p
+    end
+    
+    def erase!
+      @parent_app.erase_region @loc, @dims
+    end
+
+    def activate
+      na = unless active? then true else false end
+      @active = true
+      if na
+        @bg.each do |l,c|
+          next unless @delta[l].nil?
+          @delta[l] = c 
+        end
+      end
+    end
+
+    def deactivate
+      e = if active? then true else false end
+      @active = false
+      if e then self.erase! end
+    end
+
+    def active?
+      @active == true
+    end
 
     def structure(&blk)
       WindowBuilder.new(self).instance_eval(&blk)
@@ -107,9 +141,20 @@ module RubyConsoleLibrary
       end
     end
 
+    def redraw_bg (region_data)
+      region_data.each do |(i,j)|
+        next if @bg[[i,j]].nil?
+        c = @bg[[i,j]] 
+        print ControlCode.get_full [[:cursor_pos, i+1, j]]
+        print ControlCode.get_full(c[0]) unless c[0] == :none
+        print c[1]
+        print ControlCode.escape "0m" unless c[0] == :none
+      end
+    end
+
     def draw_delta
       @delta.each do |p,c|
-        print ControlCode.get_full [[:cursor_pos, p[0]+1, p[1]+1]]
+        print ControlCode.get_full [[:cursor_pos, @loc[1]+p[0]+1, @loc[0]+p[1]+1]]
         print ControlCode.get_full(c[0]) unless c[0] == :none
         print c[1]
         print ControlCode.escape "0m" unless c[0] == :none
@@ -123,10 +168,10 @@ module RubyConsoleLibrary
       @control_stack.each do |w|
         next unless w.redraw?
         w.redrawn
-        print ControlCode.get_full([[:cursor_pos, w.loc[1], w.loc[0]]])
+        print ControlCode.get_full([[:cursor_pos, w.loc[1]+@loc[1], w.loc[0]+@loc[0]]])
         buf = w.draw
         buf.each_with_index do |l, ind|
-          print ControlCode.get_full([[:cursor_pos, w.loc[1]+ind, w.loc[0]]])
+          print ControlCode.get_full([[:cursor_pos, @loc[1]+w.loc[1]+ind, @loc[0]+w.loc[0]]])
           l.each do |c|
             if !c.nil? && !c[1].nil? 
               print ControlCode.get_full(c[0]) unless c[0] == :none
@@ -166,6 +211,11 @@ module RubyConsoleLibrary
       end
     end
 
+    def write_bg(loc, c)
+      @bg[loc] = c
+      @delta[loc] = c
+    end
+
     def box(s_x,s_y, style=:none)
       w = ControlTemplate.define do
         line [style, UI[:window_corner_top_left]], exp([style, UI[:window_bottom]]), [style, UI[:window_corner_top_right]]
@@ -177,7 +227,7 @@ module RubyConsoleLibrary
       buf.each_with_index do |l, line_ind|
         l.each_with_index do |c, char_ind|
           unless c[0] == :none and (c[1] == ' ' || c[1] == '' || c[1].nil?)
-            @delta[[line_ind, char_ind]] = c
+            self.write_bg([line_ind, char_ind],  c)
           end
         end
       end

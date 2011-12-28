@@ -1,7 +1,7 @@
 module RubyConsoleLibrary
     class ConsoleApp
-    @wins = []
-    @textoptions = {}
+    #@wins = []
+    #@textoptions = {}
     
     def ConsoleApp.console_size
       @@console_size
@@ -33,9 +33,45 @@ module RubyConsoleLibrary
       print ConsoleApp.control_code "2J"
     end
 
+    def add_win (new_win)
+      @wins << new_win
+      new_win.parent_app = self
+    end
+
+    def remove_win (w)
+      @wins.delete(w)
+    end
+
+    def refresh
+      @wins.reject {|w| !w.active? }.each do |w|
+        w.refresh
+      end
+    end
+
+    def erase_region (loc, dims)
+      print ControlCode.get_full([[:cursor_pos,loc[1]+1,loc[0]+1]])
+      print ControlCode.escape "0m"
+      (0..dims[1]-1).each do |i|
+        (0..dims[0]-1).each do |j|
+          print ' '
+          @app_delta << [loc[1]+1+i,loc[0]+1+j]
+        end
+        print ControlCode.get_full([[:cursor_pos, loc[1]+1+i, loc[0]+1]])
+      end
+      redraw_delta_region
+    end
+
+    def redraw_delta_region
+      @wins.reject {|w| !w.active? }.each do |w|
+        w.redraw_bg @app_delta
+      end
+      @app_delta = []
+    end
+
     def initialize
       @@console_size ||= Utils.terminal_dims || [80,25] 
       @wins = [ConsoleWin.new(@@console_size)]
+      @app_delta = []
       print ControlCode.char_conv (false)
       hide_cursor unless WINDOWS == true
       cls

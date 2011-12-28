@@ -113,9 +113,9 @@ w.structure do
     end
   end
 
-  fn_tb = textbox art_size-2, [art_size+2, 10]
-  save_button = button [art_size+2, 20], :text => 'Save'
-  load_button = button [art_size+16, 20], :text => 'Load'
+  fn_tb = textbox art_size-2, [art_size+5, 10]
+  save_button = button [art_size+5, 14], :text => 'Save'
+  load_button = button [art_size+19, 14], :text => 'Load'
 
   save_button.on_press do
     File.open(fn_tb.text, 'w') do |out_file|
@@ -131,6 +131,7 @@ w.structure do
   load_button.on_press do
     File.open(fn_tb.text, 'r') do |in_file|
       in_file.each_with_index do |l, ln|
+        l["\n"] = ''
         l.each_char_with_index do |c, cn|
           cell_arr[cn*(ART_SIZE-1)+ln].text = c.to_s
         end
