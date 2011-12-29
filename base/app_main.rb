@@ -64,6 +64,7 @@ module RubyConsoleLibrary
     def redraw_delta_region
       @wins.reject {|w| !w.active? }.each do |w|
         w.redraw_bg @app_delta
+        w.redraw_controls_at_locations @app_delta
       end
       @app_delta = []
     end

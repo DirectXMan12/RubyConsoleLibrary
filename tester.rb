@@ -1,4 +1,4 @@
-#!./ruby
+#! /usr/bin/ruby
 require './console-main.rb'
 include RubyConsoleLibrary
 
@@ -27,12 +27,12 @@ w.structure do
   cancel = button [27,10], :text => 'Cancel'
   l = label [15, 15], :text => ' ', :default => {:interior => :background_green, :border => :none}
 
-  popup_trigger = dropdown [10, 20], :text => 'Dropdown Trigger', :dd_height => 8
+# popup_trigger = dropdown [16, 20], :text => 'Dropdown Trigger', :dd_height => 8
 
-  popup_trigger.dd_win.structure do
-    button [4,2], :text => "A"
-    button [4,5], :text => "B"
-  end
+# popup_trigger.dd_win.structure do
+#   button [4,2], :text => "A"
+#   button [4,5], :text => "B"
+# end
 
   cancel.on_press do 
     quit_app = true
@@ -46,7 +46,7 @@ end
 a.refresh
 
 inrouter = InputRouter.new(w)
-popup_trigger.input_router = inrouter
+#popup_trigger.input_router = inrouter
 
 inrouter.bindings do
   bind_key(:up_arrow) do

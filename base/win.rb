@@ -45,6 +45,26 @@ module RubyConsoleLibrary
       @control_stack
     end
 
+    def redraw_controls_at_locations(locs)
+      @control_stack.each do |ctrl|
+        # [col, row], [width, height]
+        min_col = ctrl.loc[1]
+        max_col = ctrl.loc[1]+ctrl.dims[1]
+        min_row = ctrl.loc[0]
+        max_row = ctrl.loc[0]+ctrl.dims[0]
+        
+        rng_col = min_col..max_col
+        rng_row = min_row..max_row
+
+        locs.each do |l|
+          if rng_col.include?(l[0]) && rng_row.include?(l[1])
+            ctrl._redraw!
+            break
+          end
+        end
+      end
+    end
+
     def activate
       na = unless active? then true else false end
       @active = true

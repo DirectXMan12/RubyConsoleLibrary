@@ -157,6 +157,7 @@ w.structure do
     File.open(fn_tb.text, 'r') do |in_file|
       in_file.each_with_index do |l, ln|
         l["\n"] = ''
+        l.gsub!(/\w+$/, '')
         l.each_char_with_index do |c, cn|
           cell_arr[cn*(ART_SIZE-1)+ln].text = c.to_s
         end
