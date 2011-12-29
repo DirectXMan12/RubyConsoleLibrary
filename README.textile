@@ -9,7 +9,7 @@ h2. - Requirements/Installation -
 
 * if you are on Windows, and are using the default command prompt (or powershell, etc), you must install win32console for this library to work correctly - it adds standard ANSI support to the windows console
 * RubyConsoleLibrary will automatically detect a windows installation as the aim is to eventually ensure that it is automatically and simply cross-platform
-* Currently non-Windows platforms require the use of _Unicode_ (I am working on correcting this, but for the moment Unicode is the easiest remedy to most installs of Linux having no CP437)
+* Currently non-Windows platforms require the use of _Unicode_ (I am working on correcting this, but for the moment Unicode is the easiest remedy)
 
 h2. - Usage -
 
