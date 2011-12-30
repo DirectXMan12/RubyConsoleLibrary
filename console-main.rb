@@ -32,7 +32,9 @@ require_relative 'utils/to_display_array.rb'
 
 # text-related stuff
 require_relative 'characters/hashes-controlcodes.rb' #'console-controlcodes-hashes.rb'
-require_relative 'characters/hashes-ui.rb' #'console-UIChars-hashes.rb'
+#require_relative 'characters/hashes-ui.rb' #'console-UIChars-hashes.rb'
+require_relative 'characters/hashes-ui-cp437.rb'
+require_relative 'characters/hashes-ui-unicode.rb'
 require_relative 'characters/utils.rb' #'console-characters-utils.rb'
 
 # controls

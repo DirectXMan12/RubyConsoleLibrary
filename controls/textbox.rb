@@ -69,15 +69,15 @@ module RubyConsoleLibrary
         @current_ui_style = style
         @changed = false
         @raw_template = ControlTemplate.define do
-          line [style, UI[:line_corner_top_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_top_right]]
-          line [style, unless me.display_cursor > 0 then UI[:line_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:line_side] else UI[:nav_scroll_right] end]
-          line [style, UI[:line_corner_bottom_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_bottom_right]]
+          line [style, UI[:boldline_corner_top_left]], exp([style, UI[:boldline_bottom]]), [style, UI[:boldline_corner_top_right]]
+          line [style, unless me.display_cursor > 0 then UI[:boldline_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:boldline_side] else UI[:nav_scroll_right] end]
+          line [style, UI[:boldline_corner_bottom_left]], exp([style, UI[:boldline_bottom]]), [style, UI[:boldline_corner_bottom_right]]
         end
       else
         @raw_template ||= ControlTemplate.define do
-          line [style, UI[:line_corner_top_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_top_right]]
-          line [style, unless me.display_cursor > 0 then UI[:line_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:line_side] else UI[:nav_scroll_right] end]
-          line [style, UI[:line_corner_bottom_left]], exp([style, UI[:line_bottom]]), [style, UI[:line_corner_bottom_right]]
+          line [style, UI[:boldline_corner_top_left]], exp([style, UI[:boldline_bottom]]), [style, UI[:boldline_corner_top_right]]
+          line [style, unless me.display_cursor > 0 then UI[:boldline_side] else UI[:nav_scroll_left] end], exp('!:text'), [style, unless me.text.length - me.display_cursor > me.dims[0] - 2 then UI[:boldline_side] else UI[:nav_scroll_right] end]
+          line [style, UI[:boldline_corner_bottom_left]], exp([style, UI[:boldline_bottom]]), [style, UI[:boldline_corner_bottom_right]]
         end
       end
     end
