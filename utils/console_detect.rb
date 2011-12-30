@@ -5,6 +5,12 @@ module RubyConsoleLibrary
       @@windows_f[:get_screen_buf_info] = Win32API.new('kernel32', 'GetConsoleScreenBufferInfo', ['L', 'P'], 'L')
     end
 
+    # Determines if a shell command exists by searching for it in ENV['PATH'].
+    # courtesy of https://github.com/cldwalker/hirb/blob/master/lib/hirb/util.rb
+    def self.command_exists?(command)
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
+    end
+
     # Returns [width, height] of terminal when detected, nil if not detected.
     # Think of this as a simpler version of Highline's Highline::SystemExtensions.terminal_size()
     # courtesy of https://github.com/cldwalker/hirb/blob/master/lib/hirb/util.rb#L61-71

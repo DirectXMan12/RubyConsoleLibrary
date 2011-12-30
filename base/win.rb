@@ -247,6 +247,14 @@ module RubyConsoleLibrary
       @delta[loc] = c
     end
 
+    def write_buf_bg(start_loc, buf)
+      buf.each_with_index do |line, row|
+        line.each_with_index do |char, col|
+          write_bg [start_loc[0]+row, start_loc[1]+col], char
+        end
+      end
+    end
+
     def box(s_x,s_y, style=:none)
       w = ControlTemplate.define do
         line [style, UI[:window_corner_top_left]], exp([style, UI[:window_bottom]]), [style, UI[:window_corner_top_right]]

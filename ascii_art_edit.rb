@@ -6,12 +6,21 @@ quit_app = false # predefined so can set later
 
 a = ConsoleApp.new
 
-art_size = ConsoleApp.console_size.min-2
+art_size = ConsoleApp.console_size.min-12
 
 w = a.wins[0]
 
-w.box art_size+1, art_size+1, :foreground_blue
-w.refresh
+#w.box art_size+1, art_size+1, :foreground_blue
+bgbs = :foreground_blue
+split_box = ControlTemplate.define do 
+  line [bgbs, UI[:window_corner_top_left]], exp([bgbs, UI[:window_bottom]]), [bgbs, UI[:window_corner_top_right]]
+  line exp(:v => [[bgbs, UI[:window_side]], exp([bgbs, ' ']), [bgbs, UI[:window_side]]])
+  line [bgbs, UI[:wintoline_left_t_sright]], exp([bgbs, UI[:line_bottom]]), [bgbs, UI[:wintoline_right_t_sleft]]
+  9.times { line [bgbs, UI[:window_side]], exp([bgbs, ' ']), [bgbs, UI[:window_side]] }
+  line [bgbs, UI[:window_corner_bottom_left]], exp([bgbs, UI[:window_bottom]]), [bgbs, UI[:window_corner_bottom_right]]
+end
+w.write_buf_bg [0,0], split_box.render(art_size+13, art_size+13)
+a.refresh
 
 ART_SIZE = art_size
 
@@ -126,9 +135,10 @@ end
 
 cell_arr = []
 w.structure do 
-  (2..art_size).each do |row|
-    (2..art_size).each do |col|
+  (2..art_size+12).each do |row|
+    (2..art_size+2).each do |col|
       cell_arr << (c = cell([row,col]))
+      #c.text = col.to_s
       c.dd_win.structure do
         (minb [2,2], :text => UI[:block_full]).on_press do
           c.text = UI[:block_full]
@@ -138,30 +148,49 @@ w.structure do
     end
   end
 
-  fn_tb = textbox art_size-2, [art_size+5, 10]
-  save_button = button [art_size+5, 14], :text => 'Save'
-  load_button = button [art_size+19, 14], :text => 'Load'
+  fn_tb = textbox art_size-2, [6, art_size+4]
+  save_button = button [6, art_size+8], :text => 'Save'
+  load_button = button [20, art_size+8], :text => 'Load'
+  output_label = label [30, art_size+9], :text => 'Loaded!'
 
   save_button.on_press do
-    File.open(fn_tb.text, 'w') do |out_file|
-      (0..ART_SIZE-2).each do |row|
-        (0..ART_SIZE-2).each do |col|
-          out_file.syswrite(cell_arr[col*(ART_SIZE-1)+row].text)
+    begin
+      File.open(fn_tb.text, 'w') do |out_file|
+        (0..ART_SIZE).each do |row|
+          (0..ART_SIZE+10).each do |col|
+            out_file.syswrite(cell_arr[col*(ART_SIZE+1)+row].text)
+          end
+          out_file.syswrite("\n")
         end
-        out_file.syswrite("\n")
       end
+      output_label.text = "File saved!"
+    #rescue Exception => e
+    #  output_label.text = "Unable to save: #{e.to_s}"
     end
   end
 
   load_button.on_press do
-    File.open(fn_tb.text, 'r') do |in_file|
-      in_file.each_with_index do |l, ln|
-        l["\n"] = ''
-        l.gsub!(/\s+$/, '') unless l.match(/^\s+$/)
-        l.each_char_with_index do |c, cn|
-          cell_arr[cn*(ART_SIZE-1)+ln].text = c.to_s
+    begin 
+      lines_read = 0
+      lines_total = 0
+      File.open(fn_tb.text, 'r') do |in_file|
+        in_file.each_with_index do |l, ln|
+          lines_total += 1
+          if ln > ART_SIZE
+            next
+          end
+          l["\n"] = ''
+          l.gsub!(/\s+$/, '') unless l.match(/^\s+$/)
+          l.each_char_with_index do |c, cn|
+            #puts "#{c}: #{ln}/#{ART_SIZE+2},#{cn}/#{ART_SIZE+12}"
+            cell_arr[cn*(ART_SIZE+1)+ln].text = c.to_s
+          end
+          lines_read += 1
         end
       end
+      output_label.text = "File loaded (#{lines_read}/#{lines_total} l)!"
+    rescue Exception => e
+      output_label.text = "Unable to load: #{e.to_s}"
     end
   end
 end
@@ -188,17 +217,17 @@ inrouter.bindings do
 
   bind_key(:right_arrow) do
     curr_pos = get_focus_pos 
-    set_focus (curr_pos + ART_SIZE - 1)
+    set_focus (curr_pos + ART_SIZE + 1)
   end
 
   bind_key(:left_arrow) do
     curr_pos = get_focus_pos
-    set_focus (curr_pos - ART_SIZE + 1)
+    set_focus (curr_pos - ART_SIZE - 1)
   end
 
   bind_key(' ') do
     curr_pos = get_focus_pos
-    set_focus (curr_pos + ART_SIZE - 1)
+    set_focus (curr_pos + ART_SIZE + 1)
   end
 
   bind_key(:ctrl_e) do

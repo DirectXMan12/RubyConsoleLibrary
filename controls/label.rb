@@ -47,7 +47,12 @@ module RubyConsoleLibrary
           line exp(:v => [exp(' ')])
         end)
         
+        buf = sp.render(*@old_dims)
         owner.force_write_delta @loc.map { |i| i - 1 }, buf
+        #if @loc[0].kind_of?(Symbol) || @loc[1].kind_of?(Symbol) || @old_dims[0].kind_of?(Symbol) || @old_dims[1].kind_of?(Symbol)
+        #  raise "#{@loc.inspect}, #{@old_dims.inspect}"
+        #end
+        #owner.parent_app.erase_region(@loc, @old_dims)
       end
       @old_dims = d.clone
       raw_template(@colors,@state).render(*d)
