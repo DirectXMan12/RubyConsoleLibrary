@@ -25,6 +25,12 @@ module RubyConsoleLibrary
 
       @input_router = nil
     end
+
+    def dims
+      d = super
+      if d[0] == :auto then d[0] = @text.length + 2 end
+      return d
+    end
     
     attr_accessor :dd_win
     attr_accessor :input_router

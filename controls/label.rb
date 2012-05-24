@@ -37,10 +37,15 @@ module RubyConsoleLibrary
       @text
     end
 
+    def dims
+      d = super
+      if d[0] == :auto then d[0] = @text.length + (if @show_border then 4 else 0 end) end
+      if d[1] == 1 and @show_border then d[1] += 2 end
+      return d
+    end
+
     def make_template
-      d = @dims.clone
-      if @dims[0] == :auto then d[0] = @text.length + (if @show_border then 4 else 0 end) end
-      if @dims[1] == 1 and @show_border then d[1] += 2 end
+      d = self.dims
       @state ||= :default
       if d[0] < @old_dims[0] || d[1] < @old_dims[1]
         sp = (ControlTemplate.define do

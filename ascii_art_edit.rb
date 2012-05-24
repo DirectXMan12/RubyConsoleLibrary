@@ -110,6 +110,12 @@ module RubyConsoleLibrary
       raw_template(@colors, @state).render(*d)
     end
 
+    def dims
+      d = @dims
+      if d[0] == :auto then d[0] = @text.length end
+      return d
+    end
+
     def raw_template(style, k)
       if @old_state != k
         @raw_template = nil
